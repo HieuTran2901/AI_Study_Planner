@@ -23,7 +23,7 @@ A modern, beautiful AI-powered study planning web application that helps student
 
 ## 🚀 Live Demo
 
-[→ Xem demo tại đây](https://your-deploy-link.vercel.app)   <!-- Deploy sau sẽ có -->
+[→ View demo here](https://www.figma.com/make/cz3YJz5BET0ppeTAjHLz92/Untitled?t=u80YnmTMn3IgglRp-1) 
 
 ## 📸 Screenshots
 ### Landing page
