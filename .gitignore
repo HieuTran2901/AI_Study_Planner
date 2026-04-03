@@ -73,5 +73,5 @@ coverage
 .eslintcache
 .stylelintcache
 
-# Tailwind / PostCSS cache (nếu có)
+# Tailwind
 .tailwind
