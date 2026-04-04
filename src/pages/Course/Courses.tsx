@@ -149,22 +149,22 @@ export default function Courses() {
   ).length;
 
   return (
-    <div className="min-h-full p-8 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f1a] to-[#0a0a0f]">
+    <div className="min-h-full p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f1a] to-[#0a0a0f]">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent mb-2">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent mb-2">
           My Courses
         </h1>
         <p className="text-gray-400">Manage and track your learning journey</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 lg:mb-8">
         <Card className="border-white/[0.08] bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-xl">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Enrolled</p>
+                <p className="text-xs sm:text-sm text-gray-400">Enrolled</p>
                 <p className="text-2xl font-bold text-white">{enrolledCount}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center">
@@ -178,7 +178,7 @@ export default function Courses() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Completed</p>
+                <p className="text-xs sm:text-sm text-gray-400">Completed</p>
                 <p className="text-2xl font-bold text-white">
                   {completedCount}
                 </p>
@@ -194,7 +194,7 @@ export default function Courses() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">In Progress</p>
+                <p className="text-xs sm:text-sm text-gray-400">In Progress</p>
                 <p className="text-2xl font-bold text-white">
                   {inProgressCount}
                 </p>
@@ -247,7 +247,7 @@ export default function Courses() {
       </div>
 
       {/* Courses Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
           <Card
             key={course.id}
@@ -279,7 +279,9 @@ export default function Courses() {
                 <h3 className="font-semibold text-white mb-2 line-clamp-2 group-hover:text-indigo-400 transition-colors">
                   {course.title}
                 </h3>
-                <p className="text-sm text-gray-400">{course.instructor}</p>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  {course.instructor}
+                </p>
               </div>
 
               {/* Meta Info */}

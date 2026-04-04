@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Map,
@@ -13,6 +13,8 @@ import {
   ChevronLeft,
   Sparkles,
   MessageSquare,
+  Menu,
+  X,
 } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -30,33 +32,28 @@ const navItems = [
 export function Layout() {
   const location = useLocation();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
-
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close user dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowUserDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#0a0a0f]">
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`relative border-r border-white/[0.08] bg-gradient-to-b from-[#0a0a0f] to-[#11111b] transition-all duration-300 ${
-          isSidebarCollapsed ? "w-20" : "w-64"
+        className={`fixed lg:relative inset-y-0 left-0 z-50 border-r border-white/[0.08] bg-gradient-to-b from-[#0a0a0f] to-[#11111b] transition-all duration-300 ${
+          isSidebarCollapsed ? "lg:w-20" : "lg:w-64"
+        } ${
+          isMobileMenuOpen
+            ? "translate-x-0 w-64"
+            : "-translate-x-full lg:translate-x-0"
         }`}
       >
         {/* Logo */}
@@ -79,6 +76,13 @@ export function Layout() {
               <Sparkles size={18} className="text-white" />
             </div>
           )}
+          {/* Mobile close button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="lg:hidden text-gray-400 hover:text-white"
+          >
+            <X size={24} />
+          </button>
         </div>
 
         {/* Navigation */}
@@ -91,6 +95,7 @@ export function Layout() {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group relative ${
                   isActive
                     ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white shadow-lg shadow-indigo-500/10"
@@ -143,10 +148,10 @@ export function Layout() {
           </div>
         </div>
 
-        {/* Collapse Button */}
+        {/* Collapse Button - Desktop Only */}
         <button
           onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-[#18181b] border border-white/[0.08] flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-500/20 transition-all"
+          className="hidden lg:flex absolute -right-3 top-20 w-6 h-6 rounded-full bg-[#18181b] border border-white/[0.08] items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-500/20 transition-all"
         >
           <ChevronLeft
             size={14}
@@ -158,31 +163,49 @@ export function Layout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation Bar */}
-        <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0f]/80 backdrop-blur-xl flex items-center justify-between px-6">
-          {/* Search */}
-          <div className="flex-1 max-w-xl">
-            <div className="relative group">
+        <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0f]/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6">
+          {/* Left Section - Hamburger Menu (Mobile) */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden w-10 h-10 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] flex items-center justify-center text-gray-400 hover:text-white transition-all"
+            >
+              <Menu size={20} />
+            </button>
+
+            {/* Logo (Mobile) */}
+            <div className="lg:hidden flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <Sparkles size={16} className="text-white" />
+              </div>
+              <h1 className="text-base font-bold text-white">AI Study</h1>
+            </div>
+          </div>
+
+          {/* Search - Desktop */}
+          <div className="hidden md:flex flex-1 max-w-xl mx-6">
+            <div className="relative w-full">
               <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 size={18}
               />
               <Input
                 placeholder="Search courses, topics..."
-                className="pl-10 w-full 
-                 bg-zinc-900/80 border border-zinc-700 
-                 text-white placeholder:text-gray-500 
-                 focus:bg-zinc-900 
-                 focus:border-indigo-500 
-                 focus:ring-2 focus:ring-indigo-500/30 
-                 focus:shadow-[0_0_0_3px_rgba(99,102,241,0.15)]
-                 transition-all duration-200 
-                 rounded-2xl h-11"
+                className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-gray-500 focus:bg-white/[0.08] focus:border-indigo-500/50"
               />
             </div>
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Search Icon (Mobile/Tablet) */}
+            <button
+              onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+              className="md:hidden w-10 h-10 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] flex items-center justify-center transition-all"
+            >
+              <Search size={18} className="text-gray-400" />
+            </button>
+
             {/* Notifications */}
             <button className="relative w-10 h-10 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] flex items-center justify-center transition-all group">
               <Bell
@@ -192,18 +215,40 @@ export function Layout() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full ring-2 ring-[#0a0a0f]" />
             </button>
 
-            {/* Profile */}
-            <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08]">
+            {/* Profile - Desktop */}
+            <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08]">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
                 <User size={16} className="text-white" />
               </div>
-              <div className="text-left">
+              <div className="hidden lg:block text-left">
                 <p className="text-sm font-medium text-white">Alex Johnson</p>
                 <p className="text-xs text-gray-400">Premium</p>
               </div>
             </div>
+
+            {/* Profile Icon Only - Mobile */}
+            <button className="md:hidden w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+              <User size={18} className="text-white" />
+            </button>
           </div>
         </header>
+
+        {/* Expanded Search Bar (Mobile) */}
+        {isSearchExpanded && (
+          <div className="md:hidden px-4 py-3 border-b border-white/[0.08] bg-[#0a0a0f]">
+            <div className="relative">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <Input
+                placeholder="Search courses, topics..."
+                className="pl-10 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-gray-500"
+                autoFocus
+              />
+            </div>
+          </div>
+        )}
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-auto">
@@ -213,73 +258,86 @@ export function Layout() {
 
       {/* AI Chat Panel */}
       {showAIChat && (
-        <div className="w-96 border-l border-white/[0.08] bg-gradient-to-b from-[#0a0a0f] to-[#11111b] flex flex-col">
-          <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                <Sparkles size={16} className="text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white">AI Assistant</h3>
-                <p className="text-xs text-gray-400">Ask me anything</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowAIChat(false)}
-              className="text-gray-400 hover:text-white"
-            >
-              ×
-            </button>
-          </div>
+        <>
+          {/* Mobile/Tablet Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setShowAIChat(false)}
+          />
 
-          <div className="flex-1 p-4 overflow-auto">
-            <div className="space-y-4">
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                  <Sparkles size={14} className="text-white" />
+          {/* Chat Panel */}
+          <div
+            className={`fixed lg:relative inset-y-0 right-0 z-50 w-full sm:w-96 border-l border-white/[0.08] bg-gradient-to-b from-[#0a0a0f] to-[#11111b] flex flex-col transition-transform duration-300 ${
+              showAIChat ? "translate-x-0" : "translate-x-full lg:translate-x-0"
+            }`}
+          >
+            <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                  <Sparkles size={16} className="text-white" />
                 </div>
-                <div className="flex-1 bg-white/[0.05] rounded-lg p-3 border border-white/[0.08]">
-                  <p className="text-sm text-gray-300">
-                    Hi! I'm your AI study assistant. I can help you with:
+                <div>
+                  <h3 className="font-semibold text-white">AI Assistant</h3>
+                  <p className="text-xs text-gray-400">Ask me anything</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowAIChat(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="flex-1 p-4 overflow-auto">
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                    <Sparkles size={14} className="text-white" />
+                  </div>
+                  <div className="flex-1 bg-white/[0.05] rounded-lg p-3 border border-white/[0.08]">
+                    <p className="text-sm text-gray-300">
+                      Hi! I'm your AI study assistant. I can help you with:
+                    </p>
+                    <ul className="mt-2 space-y-1 text-xs text-gray-400">
+                      <li>• Suggesting next topics to learn</li>
+                      <li>• Creating study schedules</li>
+                      <li>• Answering questions</li>
+                      <li>• Tracking your progress</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-500 px-1">
+                    Suggested Questions:
                   </p>
-                  <ul className="mt-2 space-y-1 text-xs text-gray-400">
-                    <li>• Suggesting next topics to learn</li>
-                    <li>• Creating study schedules</li>
-                    <li>• Answering questions</li>
-                    <li>• Tracking your progress</li>
-                  </ul>
+                  <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
+                    What should I learn next?
+                  </button>
+                  <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
+                    How am I progressing?
+                  </button>
+                  <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
+                    Create a study plan for this week
+                  </button>
                 </div>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 px-1">
-                  Suggested Questions:
-                </p>
-                <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
-                  What should I learn next?
-                </button>
-                <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
-                  How am I progressing?
-                </button>
-                <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
-                  Create a study plan for this week
-                </button>
+            <div className="p-4 border-t border-white/[0.08]">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Ask AI anything..."
+                  className="flex-1 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-gray-500"
+                />
+                <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:shadow-lg hover:shadow-indigo-500/30">
+                  Send
+                </Button>
               </div>
             </div>
           </div>
-
-          <div className="p-4 border-t border-white/[0.08]">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Ask AI anything..."
-                className="flex-1 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-gray-500"
-              />
-              <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:shadow-lg hover:shadow-indigo-500/30">
-                Send
-              </Button>
-            </div>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );
