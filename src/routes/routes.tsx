@@ -6,6 +6,8 @@ import Timer from "@/pages/Timer";
 import Courses from "@/pages/Course";
 import StudyProgress from "@/pages/Progress";
 import Settings from "@/pages/Setting";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 import { Layout } from "@/components/Layout";
 
 export const publicRoutes = createBrowserRouter([
@@ -42,5 +44,13 @@ export const publicRoutes = createBrowserRouter([
   {
     path: "/landing",
     Component: LandingPage,
+  },
+  {
+    path: "/login",
+    Component: Login,
+  },
+  {
+    path: "/register",
+    Component: Register,
   },
 ]);
