@@ -7,9 +7,9 @@ import {
   ChevronRight,
   CheckCircle2,
 } from "lucide-react";
-import { Card, CardContent } from "../../components/ui/card";
-import { Progress } from "../../components/ui/progress";
-import { Badge } from "../../components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import {
   LineChart,
   Line,

@@ -8,16 +8,16 @@ import {
   CheckCircle2,
   Clock,
 } from "lucide-react";
-import { Card, CardContent } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import { Progress } from "../../components/ui/progress";
+} from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 
 const POMODORO_DURATION = 25 * 60;
 const SHORT_BREAK = 5 * 60;
