@@ -10,6 +10,9 @@ import {
   Search,
   Bell,
   User,
+  LogOut,
+  UserCircle,
+  HelpCircle,
   ChevronLeft,
   Sparkles,
   MessageSquare,
@@ -35,6 +38,11 @@ export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#0a0a0f]">
@@ -163,7 +171,7 @@ export function Layout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation Bar */}
-        <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0f]/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6">
+        <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0f]/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-50">
           {/* Left Section - Hamburger Menu (Mobile) */}
           <div className="flex items-center gap-3">
             <button
@@ -215,15 +223,78 @@ export function Layout() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full ring-2 ring-[#0a0a0f]" />
             </button>
 
-            {/* Profile - Desktop */}
-            <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08]">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
-                <User size={16} className="text-white" />
-              </div>
-              <div className="hidden lg:block text-left">
-                <p className="text-sm font-medium text-white">Alex Johnson</p>
-                <p className="text-xs text-gray-400">Premium</p>
-              </div>
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button
+                onClick={toggleProfileDropdown}
+                className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+                  <User size={16} className="text-white" />
+                </div>
+                <div className="hidden lg:block text-left">
+                  <p className="text-sm font-medium text-white">Alex Johnson</p>
+                  <p className="text-xs text-gray-400">Premium</p>
+                </div>
+                <ChevronLeft
+                  size={16}
+                  className={`transition-transform ${isProfileDropdownOpen ? "rotate-90" : "-rotate-90"}`}
+                />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-[#11111b] border border-white/[0.08] rounded-2xl shadow-2xl py-2 z-50">
+                  <div className="px-4 py-3 border-b border-white/[0.08]">
+                    <p className="font-medium text-white">Alex Johnson</p>
+                    <p className="text-sm text-gray-400">Premium Member</p>
+                  </div>
+
+                  <div className="py-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/[0.05] hover:text-white transition-colors"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      <UserCircle size={18} />
+                      View Profile
+                    </Link>
+
+                    <Link
+                      to="/settings"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/[0.05] hover:text-white transition-colors"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      <Settings size={18} />
+                      Settings
+                    </Link>
+
+                    <button
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/[0.05] hover:text-white transition-colors"
+                      onClick={() => {
+                        alert("Help & Support clicked");
+                        setIsProfileDropdownOpen(false);
+                      }}
+                    >
+                      <HelpCircle size={18} />
+                      Help & Support
+                    </button>
+                  </div>
+
+                  <div className="border-t border-white/[0.08] pt-2 mt-2">
+                    <button
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                      onClick={() => {
+                        alert("Logged out");
+                        setIsProfileDropdownOpen(false);
+                      }}
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Profile Icon Only - Mobile */}
