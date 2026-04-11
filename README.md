@@ -18,21 +18,6 @@ It provides features like AI-generated study plans, Pomodoro sessions, progress 
 
 ---
 
-## 📁 Project Structure
-com.aistudyplanner
-├── auth           # Authentication (login, register, JWT)
-├── user           # User profile & preferences
-├── plan           # Study plans / roadmap
-├── session        # Pomodoro & study sessions
-├── progress       # Statistics & tracking
-├── ai             # AI integration (chat, plan generation)
-├── course         # Course recommendation
-├── achievement    # Achievements system
-├── security       # JWT & Spring Security config
-└── common         # DTOs, exceptions, utilities
-
----
-
 ## 🔐 Authentication
 - Uses JWT (JSON Web Token)
 - Flow:
