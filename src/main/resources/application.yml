@@ -16,7 +16,7 @@ spring:
 jwt:
   secret-v1: ${JWT_SECRET_V1:6KkpGcRg8HpHdJksM7HLbA8ZOYfhED7EPv4oVNLrPwM=}
   generate-key: false   # change true to generate key
-  debug: false
+  debug: false          # debug mode
   access:
     expiration: 1800000
   refresh:
