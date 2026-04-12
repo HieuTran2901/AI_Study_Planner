@@ -10,7 +10,9 @@ public enum ErrorCode {
     EMAIL_NOT_FOUND(1003, "Email not found"),
     PASSWORD_INCORRECT(1004, "Incorrect password!"),
     INVALID_REFRESH_TOKEN(1005, "Invalid refresh token"),
-    USER_NOT_FOUND(1006, "User not found");
+    USER_NOT_FOUND(1006, "User not found"),
+    USER_NOT_AUTHENTICATED(1007, "User not authenticated"),
+    PREFERENCE_NOT_FOUND(1008, "Preference not found")
     ;
 
     private final int code;

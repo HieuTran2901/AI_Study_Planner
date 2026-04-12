@@ -4,21 +4,26 @@ import com.example.AI_Study_Planer.common.ApiResponse;
 import com.example.AI_Study_Planer.common.ErrorCode;
 import com.example.AI_Study_Planer.dto.request.LoginRequest;
 import com.example.AI_Study_Planer.dto.request.RegisterRequest;
+import com.example.AI_Study_Planer.dto.request.UpdateProfileRequest;
+import com.example.AI_Study_Planer.dto.request.UserPreferenceRequest;
 import com.example.AI_Study_Planer.dto.response.LogoutResponse;
 import com.example.AI_Study_Planer.dto.response.TokenResponse;
+import com.example.AI_Study_Planer.dto.response.UserPreferenceResponse;
 import com.example.AI_Study_Planer.dto.response.UserResponse;
 import com.example.AI_Study_Planer.entity.RefreshToken;
 import com.example.AI_Study_Planer.entity.User;
+import com.example.AI_Study_Planer.entity.UserPreference;
 import com.example.AI_Study_Planer.exception.AppException;
+import com.example.AI_Study_Planer.mapper.UserMapper;
 import com.example.AI_Study_Planer.repository.RefreshTokenRepository;
 import com.example.AI_Study_Planer.repository.UserRepository;
 import com.example.AI_Study_Planer.service.UserService;
 import com.example.AI_Study_Planer.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -31,12 +36,56 @@ import java.util.Optional;
 public class UserController {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @GetMapping("/users/me")
+    public ApiResponse<UserResponse> getUserProfile(Authentication authentication) {
+        User user = userService.getCurrentUser(authentication);
+
+        return ApiResponse.<UserResponse>builder()
+                .results(userMapper.toUserResponse(user))
+                .build();
+    }
+
+    @GetMapping("/users/preference")
+    public ApiResponse<UserPreferenceResponse> getUserPreference(Authentication authentication) {
+        UserPreferenceResponse preference = userService.getUserPreference(authentication);
+
+        return ApiResponse.<UserPreferenceResponse>builder()
+                .results(preference)
+                .build();
+    }
+
+    @PutMapping("/users/profile")
+    public ApiResponse<UserResponse> updateUserProfile(
+            @RequestBody UpdateProfileRequest request,
+            Authentication authentication
+            ) {
+        UserResponse user = userService.updateProfile(request, authentication);
+
+        return ApiResponse.<UserResponse>builder()
+                .results(user)
+                .build();
+    }
+
+
+    @PutMapping("/users/preference")
+    public ApiResponse<UserPreferenceResponse> updatePreference(
+            @RequestBody UserPreferenceRequest request,
+            Authentication authentication
+            ) {
+        UserPreferenceResponse preference = userService.updatePreference(request, authentication);
+
+        return ApiResponse.<UserPreferenceResponse>builder()
+                .results(preference)
+                .build();
+    }
 
     @PostMapping("/register")
     public ApiResponse<UserResponse> register(@RequestBody RegisterRequest request) {
@@ -71,7 +120,7 @@ public class UserController {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setSecure(false);
         cookie.setHttpOnly(true); // true for https, false for http
-        cookie.setPath("/auth/refresh");
+        cookie.setPath("/api/auth/refresh");
         cookie.setMaxAge((int) (jwtUtil.getRefreshExpiration() / 1000));
 
         response.addCookie(cookie);
@@ -84,7 +133,7 @@ public class UserController {
     }
 
     @PostMapping("/refresh")
-    public ApiResponse<TokenResponse> refreshToken(
+    public ApiResponse<TokenResponse> refresh(
             @CookieValue(value = "refreshToken", required = false) String refreshToken,
             HttpServletResponse response
     ) {
@@ -116,12 +165,11 @@ public class UserController {
         refreshTokenRepository.save(rt);
 
         // Set new cookie
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        Cookie cookie = new Cookie("refreshToken", newRefreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
-        cookie.setPath("/auth/refresh");
+        cookie.setPath("/api/auth/refresh");
         cookie.setMaxAge((int) (jwtUtil.getRefreshExpiration() / 1000));
-
         response.addCookie(cookie);
 
         TokenResponse tokenResponse = new TokenResponse(newAccessToken);
@@ -145,7 +193,7 @@ public class UserController {
         // Delete token from cookie
         Cookie deleteCookie = new Cookie("refreshToken", null);
         deleteCookie.setHttpOnly(true);
-        deleteCookie.setPath("/auth/refresh");
+        deleteCookie.setPath("/api/auth/refresh");
         deleteCookie.setSecure(false);
         deleteCookie.setMaxAge(0);
 

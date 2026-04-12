@@ -4,14 +4,21 @@ import com.example.AI_Study_Planer.common.ErrorCode;
 import com.example.AI_Study_Planer.constant.RoleName;
 import com.example.AI_Study_Planer.dto.request.LoginRequest;
 import com.example.AI_Study_Planer.dto.request.RegisterRequest;
+import com.example.AI_Study_Planer.dto.request.UpdateProfileRequest;
+import com.example.AI_Study_Planer.dto.request.UserPreferenceRequest;
+import com.example.AI_Study_Planer.dto.response.UserPreferenceResponse;
 import com.example.AI_Study_Planer.dto.response.UserResponse;
 import com.example.AI_Study_Planer.entity.User;
+import com.example.AI_Study_Planer.entity.UserPreference;
 import com.example.AI_Study_Planer.enums.UserStatus;
 import com.example.AI_Study_Planer.exception.AppException;
+import com.example.AI_Study_Planer.mapper.PreferenceMapper;
 import com.example.AI_Study_Planer.mapper.UserMapper;
+import com.example.AI_Study_Planer.repository.PreferenceRepository;
 import com.example.AI_Study_Planer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +29,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PreferenceRepository preferenceRepository;
+
     private final UserMapper userMapper;
+    private final PreferenceMapper preferenceMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -56,5 +66,53 @@ public class UserService {
         }
 
         return userMapper.toUserResponse(logUser);
+    }
+
+    public User getCurrentUser(Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
+        }
+
+        String userId = authentication.getName();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+    }
+
+    public UserResponse updateProfile(UpdateProfileRequest request, Authentication authentication) {
+        User user = getCurrentUser(authentication);
+
+        user.setFullName(request.getFullName());
+        user.setPhone(request.getPhone());
+
+        userRepository.save(user);
+
+        return userMapper.toUserResponse(user);
+    }
+
+    public UserPreferenceResponse updatePreference(UserPreferenceRequest request, Authentication authentication) {
+        User user = getCurrentUser(authentication);
+
+        UserPreference userPreference = preferenceRepository.findByUserId(user.getId())
+                .orElseGet(() -> {
+                    UserPreference newPreference = new UserPreference();
+                    newPreference.setUser(user);
+                    return newPreference;
+                });
+
+        preferenceMapper.updatePreference(userPreference, request);
+
+        UserPreference savePreference = preferenceRepository.save(userPreference);
+
+        return preferenceMapper.toPreferenceResponse(savePreference);
+    }
+
+    public UserPreferenceResponse getUserPreference(Authentication authentication) {
+        User user = getCurrentUser(authentication);
+
+        UserPreference preference = preferenceRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.PREFERENCE_NOT_FOUND));
+
+        return preferenceMapper.toPreferenceResponse(preference);
     }
 }
