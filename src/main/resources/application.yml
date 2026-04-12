@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ai_study_planner_db}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret-v1: ${JWT_SECRET_V1:6KkpGcRg8HpHdJksM7HLbA8ZOYfhED7EPv4oVNLrPwM=}
+  generate-key: false   # change true to generate key
+  debug: false
+  access:
+    expiration: 1800000
+  refresh:
+    expiration: 604800000
