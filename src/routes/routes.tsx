@@ -8,6 +8,8 @@ import StudyProgress from "@/pages/Progress";
 import Settings from "@/pages/Setting";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import HelpAndSupport from "@/pages/HelpAndSupport";
+import Profile from "@/pages/Profile";
 import { Layout } from "@/components/Layout";
 
 export const publicRoutes = createBrowserRouter([
@@ -38,6 +40,14 @@ export const publicRoutes = createBrowserRouter([
       {
         path: "settings",
         Component: Settings,
+      },
+      {
+        path: "help",
+        Component: HelpAndSupport,
+      },
+      {
+        path: "profile",
+        Component: Profile,
       },
     ],
   },

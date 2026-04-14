@@ -1,425 +1,171 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   User,
-  Bell,
-  Shield,
-  Palette,
-  Clock,
   Target,
-  Mail,
-  Key,
-  Save,
+  Bell,
+  Palette,
+  Shield,
+  ChevronRight,
+  Brain,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-// import { Separator } from "@/components/ui/separator";
+import Security, {
+  Profile,
+  Goal,
+  Notification,
+  Appearance,
+} from "./components";
+import LearningPreference from "./components/LearningPreference";
+
+type SettingsTab =
+  | "profile"
+  | "learning-preferences"
+  | "goals"
+  | "notifications"
+  | "appearance"
+  | "security";
+
+const sidebarItems = [
+  {
+    id: "profile" as SettingsTab,
+    icon: User,
+    label: "Profile",
+    description: "Personal information",
+  },
+  {
+    id: "learning-preferences" as SettingsTab,
+    icon: Brain,
+    label: "Learning Preferences",
+    description: "Customize your learning experience",
+  },
+  {
+    id: "goals" as SettingsTab,
+    icon: Target,
+    label: "Learning Goals",
+    description: "Study targets & preferences",
+  },
+  {
+    id: "notifications" as SettingsTab,
+    icon: Bell,
+    label: "Notifications",
+    description: "Alerts & reminders",
+  },
+  {
+    id: "appearance" as SettingsTab,
+    icon: Palette,
+    label: "Appearance",
+    description: "Theme & display",
+  },
+  {
+    id: "security" as SettingsTab,
+    icon: Shield,
+    label: "Privacy & Security",
+    description: "Account protection",
+  },
+];
 
 export default function Settings() {
-  const [profile, setProfile] = useState({
-    name: "Alex Johnson",
-    email: "alex.johnson@example.com",
-    timezone: "UTC-5",
-  });
+  const [activeTab, setActiveTab] = useState<SettingsTab>("goals");
 
-  const [goals, setGoals] = useState({
-    dailyHours: "4",
-    weeklyGoal: "30",
-    preferredTime: "morning",
-  });
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
-  const [notifications, setNotifications] = useState({
-    emailNotifications: true,
-    pushNotifications: true,
-    studyReminders: true,
-    weeklyReports: true,
-  });
+  // Automatic scroll to top when activeTab changes
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [activeTab]);
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "profile":
+        return <Profile />;
+      case "learning-preferences":
+        return <LearningPreference />;
+      case "goals":
+        return <Goal />;
+
+      case "notifications":
+        return <Notification />;
+
+      case "appearance":
+        return <Appearance />;
+
+      case "security":
+        return <Security />;
+
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="min-h-full p-8 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f1a] to-[#0a0a0f]">
+    <div className="min-h-screen bg-gradient-to-br from-black via-slate-950 to-indigo-950 text-white">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent mb-2">
-          Settings
-        </h1>
-        <p className="text-gray-400">Manage your account and preferences</p>
-      </div>
+      {/* <header className="border-b border-white/10 backdrop-blur-xl bg-slate-950/50">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <h1 className="text-3xl font-semibold bg-gradient-to-r from-white via-indigo-200 to-purple-200 bg-clip-text text-transparent">
+            Settings
+          </h1>
+          <p className="text-slate-400 mt-1">
+            Manage your account preferences and settings
+          </p>
+        </div>
+      </header> */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sidebar Navigation */}
-        <div className="lg:col-span-1">
-          <Card className="border-white/[0.08] bg-card/50 backdrop-blur-xl sticky top-8">
-            <CardContent className="p-4">
-              <nav className="space-y-1">
-                {[
-                  { icon: User, label: "Profile", active: true },
-                  { icon: Target, label: "Learning Goals", active: false },
-                  { icon: Bell, label: "Notifications", active: false },
-                  { icon: Palette, label: "Appearance", active: false },
-                  { icon: Shield, label: "Privacy & Security", active: false },
-                ].map((item) => {
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar Navigation */}
+          <div className="lg:col-span-1">
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900/50 to-slate-800/30 backdrop-blur-xl border border-white/10 sticky top-6">
+              <nav className="space-y-2">
+                {sidebarItems.map((item) => {
                   const Icon = item.icon;
                   return (
                     <button
-                      key={item.label}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-left ${
-                        item.active
-                          ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-white"
-                          : "text-gray-400 hover:bg-white/[0.05] hover:text-gray-200"
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`w-full text-left p-4 rounded-xl transition-all duration-300 group ${
+                        activeTab === item.id
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/20"
+                          : "hover:bg-slate-800/60"
                       }`}
                     >
-                      <Icon size={18} />
-                      <span className="text-sm">{item.label}</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Icon
+                            className={`w-5 h-5 ${activeTab === item.id ? "text-white" : "text-slate-400 group-hover:text-indigo-400"} transition-colors`}
+                          />
+                          <div>
+                            <p
+                              className={`font-medium text-sm ${activeTab === item.id ? "text-white" : "text-slate-300"}`}
+                            >
+                              {item.label}
+                            </p>
+                            <p
+                              className={`text-xs ${activeTab === item.id ? "text-indigo-200" : "text-slate-500"}`}
+                            >
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                        {activeTab === item.id && (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </div>
                     </button>
                   );
                 })}
               </nav>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </div>
 
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Profile Settings */}
-          <Card className="border-white/[0.08] bg-card/50 backdrop-blur-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                  <User className="text-white" size={24} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-white">
-                    Profile Settings
-                  </h2>
-                  <p className="text-sm text-gray-400">
-                    Manage your personal information
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6 mb-6 pb-6 border-b border-white/[0.08]">
-                <div className="relative">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
-                    <User size={32} className="text-white" />
-                  </div>
-                  <button className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-indigo-500 hover:bg-indigo-600 flex items-center justify-center border-2 border-[#0a0a0f] transition-colors">
-                    <span className="text-white text-xs">✎</span>
-                  </button>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Profile Picture</h3>
-                  <p className="text-sm text-gray-400 mt-1">
-                    PNG, JPG up to 5MB
-                  </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2 border-white/[0.08] text-gray-300 hover:bg-white/[0.05]"
-                  >
-                    Change Photo
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name" className="text-gray-300">
-                    Full Name
-                  </Label>
-                  <Input
-                    id="name"
-                    value={profile.name}
-                    onChange={(e) =>
-                      setProfile({ ...profile, name: e.target.value })
-                    }
-                    className="mt-1.5 bg-white/[0.05] border-white/[0.08] text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email" className="text-gray-300">
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) =>
-                      setProfile({ ...profile, email: e.target.value })
-                    }
-                    className="mt-1.5 bg-white/[0.05] border-white/[0.08] text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="timezone" className="text-gray-300">
-                    Timezone
-                  </Label>
-                  <Select
-                    value={profile.timezone}
-                    onValueChange={(value) =>
-                      setProfile({ ...profile, timezone: value })
-                    }
-                  >
-                    <SelectTrigger className="mt-1.5 bg-white/[0.05] border-white/[0.08] text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="UTC-5">
-                        Eastern Time (UTC-5)
-                      </SelectItem>
-                      <SelectItem value="UTC-6">
-                        Central Time (UTC-6)
-                      </SelectItem>
-                      <SelectItem value="UTC-7">
-                        Mountain Time (UTC-7)
-                      </SelectItem>
-                      <SelectItem value="UTC-8">
-                        Pacific Time (UTC-8)
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="flex justify-end mt-6 pt-6 border-t border-white/[0.08]">
-                <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:shadow-lg hover:shadow-indigo-500/30">
-                  <Save size={16} className="mr-2" />
-                  Save Changes
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Learning Goals */}
-          <Card className="border-white/[0.08] bg-card/50 backdrop-blur-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                  <Target className="text-white" size={24} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-white">
-                    Learning Goals
-                  </h2>
-                  <p className="text-sm text-gray-400">
-                    Set your study targets and preferences
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="dailyHours" className="text-gray-300">
-                    Daily Study Goal (hours)
-                  </Label>
-                  <Input
-                    id="dailyHours"
-                    type="number"
-                    value={goals.dailyHours}
-                    onChange={(e) =>
-                      setGoals({ ...goals, dailyHours: e.target.value })
-                    }
-                    className="mt-1.5 bg-white/[0.05] border-white/[0.08] text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="weeklyGoal" className="text-gray-300">
-                    Weekly Study Goal (hours)
-                  </Label>
-                  <Input
-                    id="weeklyGoal"
-                    type="number"
-                    value={goals.weeklyGoal}
-                    onChange={(e) =>
-                      setGoals({ ...goals, weeklyGoal: e.target.value })
-                    }
-                    className="mt-1.5 bg-white/[0.05] border-white/[0.08] text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="preferredTime" className="text-gray-300">
-                    Preferred Study Time
-                  </Label>
-                  <Select
-                    value={goals.preferredTime}
-                    onValueChange={(value) =>
-                      setGoals({ ...goals, preferredTime: value })
-                    }
-                  >
-                    <SelectTrigger className="mt-1.5 bg-white/[0.05] border-white/[0.08] text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="morning">
-                        Morning (6 AM - 12 PM)
-                      </SelectItem>
-                      <SelectItem value="afternoon">
-                        Afternoon (12 PM - 6 PM)
-                      </SelectItem>
-                      <SelectItem value="evening">
-                        Evening (6 PM - 10 PM)
-                      </SelectItem>
-                      <SelectItem value="night">
-                        Night (10 PM - 2 AM)
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="flex justify-end mt-6 pt-6 border-t border-white/[0.08]">
-                <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:shadow-lg hover:shadow-cyan-500/30">
-                  <Save size={16} className="mr-2" />
-                  Save Goals
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Notifications */}
-          <Card className="border-white/[0.08] bg-card/50 backdrop-blur-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                  <Bell className="text-white" size={24} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-white">
-                    Notifications
-                  </h2>
-                  <p className="text-sm text-gray-400">
-                    Manage how you receive updates
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    key: "emailNotifications",
-                    label: "Email Notifications",
-                    description: "Receive updates via email",
-                  },
-                  {
-                    key: "pushNotifications",
-                    label: "Push Notifications",
-                    description: "Browser push notifications",
-                  },
-                  {
-                    key: "studyReminders",
-                    label: "Study Reminders",
-                    description: "Get reminded of your study schedule",
-                  },
-                  {
-                    key: "weeklyReports",
-                    label: "Weekly Reports",
-                    description: "Receive weekly progress summaries",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.key}
-                    className="flex items-center justify-between py-3"
-                  >
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-white">
-                        {item.label}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {item.description}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={
-                        notifications[item.key as keyof typeof notifications]
-                      }
-                      onCheckedChange={(checked) =>
-                        setNotifications({
-                          ...notifications,
-                          [item.key]: checked,
-                        })
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Appearance */}
-          <Card className="border-white/[0.08] bg-card/50 backdrop-blur-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-                  <Palette className="text-white" size={24} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-white">
-                    Appearance
-                  </h2>
-                  <p className="text-sm text-gray-400">
-                    Customize the look and feel
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-gray-300 mb-3 block">Theme</Label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { name: "Dark", active: true },
-                      { name: "Light", active: false },
-                      { name: "Auto", active: false },
-                    ].map((theme) => (
-                      <button
-                        key={theme.name}
-                        className={`p-4 rounded-lg border transition-all ${
-                          theme.active
-                            ? "border-indigo-500 bg-gradient-to-br from-indigo-500/20 to-purple-500/20"
-                            : "border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05]"
-                        }`}
-                      >
-                        <div className="text-sm font-medium text-white mb-1">
-                          {theme.name}
-                        </div>
-                        <div className="flex gap-1">
-                          {theme.name === "Dark" && (
-                            <>
-                              <div className="w-6 h-6 rounded bg-gray-900" />
-                              <div className="w-6 h-6 rounded bg-gray-700" />
-                              <div className="w-6 h-6 rounded bg-gray-500" />
-                            </>
-                          )}
-                          {theme.name === "Light" && (
-                            <>
-                              <div className="w-6 h-6 rounded bg-gray-100" />
-                              <div className="w-6 h-6 rounded bg-gray-300" />
-                              <div className="w-6 h-6 rounded bg-gray-500" />
-                            </>
-                          )}
-                          {theme.name === "Auto" && (
-                            <>
-                              <div className="w-6 h-6 rounded bg-gradient-to-r from-gray-900 to-gray-100" />
-                              <div className="w-6 h-6 rounded bg-gradient-to-r from-gray-700 to-gray-300" />
-                              <div className="w-6 h-6 rounded bg-gradient-to-r from-gray-500 to-gray-500" />
-                            </>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Main Content */}
+          <div
+            className="lg:col-span-3 overflow-y-auto max-h-[calc(100vh-140px)] custom-scrollbar"
+            ref={contentRef}
+          >
+            {renderContent()}
+          </div>
         </div>
       </div>
     </div>

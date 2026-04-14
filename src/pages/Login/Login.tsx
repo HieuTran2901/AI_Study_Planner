@@ -14,6 +14,8 @@ import { FaChrome as Chrome, FaGithub as Github } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/useAuth";
+import authApi from "@/api/authApi";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +24,8 @@ export default function Login() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
+
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,11 +44,21 @@ export default function Login() {
     setErrors({});
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    // handle login
+    try {
+      const res = await authApi.login({ email, password });
+
+      const token = res.results.accessToken;
+
+      await login(token);
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrors({ password: "Invalid email or password" });
+    } finally {
       setIsLoading(false);
-      // Here you would handle actual authentication
-    }, 2000);
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
