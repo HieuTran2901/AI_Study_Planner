@@ -21,3 +21,9 @@ jwt:
     expiration: 1800000
   refresh:
     expiration: 604800000
+
+openRouter:
+  custom-api-key: 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
+#  model: nvidia/nemotron-3-super-120b-a12b:free
+  model: openai/gpt-oss-120b:free
+  url: https://openrouter.ai/api/v1/chat/completions

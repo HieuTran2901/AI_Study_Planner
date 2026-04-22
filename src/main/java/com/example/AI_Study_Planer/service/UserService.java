@@ -51,7 +51,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         user.setStatus(UserStatus.ACTIVE);
-        user.setRole(RoleName.STUDENT);
+        user.setRole(RoleName.STANDARD_MEMBER);
         user.setCreateAt(LocalDateTime.now());
 
         return userRepository.save(user);

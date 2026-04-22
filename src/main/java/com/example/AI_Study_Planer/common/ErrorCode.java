@@ -12,7 +12,9 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(1005, "Invalid refresh token"),
     USER_NOT_FOUND(1006, "User not found"),
     USER_NOT_AUTHENTICATED(1007, "User not authenticated"),
-    PREFERENCE_NOT_FOUND(1008, "Preference not found")
+    PREFERENCE_NOT_FOUND(1008, "Preference not found"),
+    CONVERSATION_NOT_FOUND(1009, "Conversation not found"),
+    HISTORY_NOT_FOUND(1010, "History not found, check your conversationId!")
     ;
 
     private final int code;
