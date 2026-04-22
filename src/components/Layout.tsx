@@ -21,8 +21,8 @@ import {
   X,
 } from "lucide-react";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import AIChatPanel from "./LayoutComponents/AIChatPanel";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -491,86 +491,7 @@ export function Layout() {
 
       {/* AI Chat Panel */}
       {showAIChat && (
-        <>
-          {/* Mobile/Tablet Overlay */}
-          <div
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-            onClick={() => setShowAIChat(false)}
-          />
-
-          {/* Chat Panel */}
-          <div
-            className={`fixed lg:relative inset-y-0 right-0 z-50 w-full sm:w-96 border-l border-white/[0.08] bg-gradient-to-b from-[#0a0a0f] to-[#11111b] flex flex-col transition-transform duration-300 ${
-              showAIChat ? "translate-x-0" : "translate-x-full lg:translate-x-0"
-            }`}
-          >
-            <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                  <Sparkles size={16} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">AI Assistant</h3>
-                  <p className="text-xs text-gray-400">Ask me anything</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowAIChat(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="flex-1 p-4 overflow-auto">
-              <div className="space-y-4">
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                    <Sparkles size={14} className="text-white" />
-                  </div>
-                  <div className="flex-1 bg-white/[0.05] rounded-lg p-3 border border-white/[0.08]">
-                    <p className="text-sm text-gray-300">
-                      Hi! I'm your AI study assistant. I can help you with:
-                    </p>
-                    <ul className="mt-2 space-y-1 text-xs text-gray-400">
-                      <li>• Suggesting next topics to learn</li>
-                      <li>• Creating study schedules</li>
-                      <li>• Answering questions</li>
-                      <li>• Tracking your progress</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-xs text-gray-500 px-1">
-                    Suggested Questions:
-                  </p>
-                  <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
-                    What should I learn next?
-                  </button>
-                  <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
-                    How am I progressing?
-                  </button>
-                  <button className="w-full text-left p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-sm text-gray-300 transition-all">
-                    Create a study plan for this week
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-white/[0.08]">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Ask AI anything..."
-                  className="flex-1 bg-white/[0.05] border-white/[0.08] text-white placeholder:text-gray-500"
-                />
-                <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:shadow-lg hover:shadow-indigo-500/30">
-                  Send
-                </Button>
-              </div>
-            </div>
-          </div>
-        </>
+        <AIChatPanel showAIChat={showAIChat} setShowAIChat={setShowAIChat} />
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import apiClient from "./axiosClient";
 import { type User } from "@/types/User.type";
+import { type ApiResponse } from "@/types/ApiResponse.type";
 
 // ==================== REQUEST INTERFACES ====================
 export interface LoginRequest {
@@ -17,12 +18,6 @@ export interface RegisterRequest {
 // ==================== RESPONSE INTERFACES ====================
 export interface AuthResponse {
   accessToken: string;
-}
-
-export interface ApiResponse<T> {
-  code: number;
-  message?: string;
-  results: T;
 }
 
 // ==================== Auth Api ====================
