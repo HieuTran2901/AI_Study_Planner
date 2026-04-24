@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,5 @@ public class MessageResponse {
     private String role;
     private String content;
     private LocalDateTime createdAt;
+    private List<String> fileUrls;
 }

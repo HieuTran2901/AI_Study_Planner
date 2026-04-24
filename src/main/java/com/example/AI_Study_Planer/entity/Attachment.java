@@ -1,11 +1,13 @@
 package com.example.AI_Study_Planer.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "attachments")
+@Data
 public class Attachment {
 
     @Id

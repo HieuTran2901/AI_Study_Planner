@@ -14,7 +14,10 @@ public enum ErrorCode {
     USER_NOT_AUTHENTICATED(1007, "User not authenticated"),
     PREFERENCE_NOT_FOUND(1008, "Preference not found"),
     CONVERSATION_NOT_FOUND(1009, "Conversation not found"),
-    HISTORY_NOT_FOUND(1010, "History not found, check your conversationId!")
+    HISTORY_NOT_FOUND(1010, "History not found, check your conversationId!"),
+    INVALID_FILE(1011, "Invalid file"),
+    INVALID_FILE_TYPE(1012, "Invalid file type"),
+    FILE_TOO_LARGE(1013, "File too large")
     ;
 
     private final int code;

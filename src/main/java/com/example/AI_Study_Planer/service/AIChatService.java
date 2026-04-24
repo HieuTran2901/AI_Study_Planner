@@ -5,12 +5,14 @@ import com.example.AI_Study_Planer.constant.RoleName;
 import com.example.AI_Study_Planer.dto.request.AIChatRequest;
 import com.example.AI_Study_Planer.dto.request.OpenRouterMessage;
 import com.example.AI_Study_Planer.dto.response.*;
+import com.example.AI_Study_Planer.entity.Attachment;
 import com.example.AI_Study_Planer.entity.Conversation;
 import com.example.AI_Study_Planer.entity.Message;
 import com.example.AI_Study_Planer.entity.User;
 import com.example.AI_Study_Planer.exception.AppException;
 import com.example.AI_Study_Planer.mapper.ConversationMapper;
 import com.example.AI_Study_Planer.mapper.MessageMapper;
+import com.example.AI_Study_Planer.repository.AttachmentRepository;
 import com.example.AI_Study_Planer.repository.ConversationRepository;
 import com.example.AI_Study_Planer.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +33,11 @@ public class AIChatService {
     private final OpenRouterService openRouterService;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
+
     private final UserService userService;
     private final PromptService promptService;
+    private final AttachmentService attachmentService;
+
     private final MessageMapper messageMapper;
     private final ConversationMapper conversationMapper;
 
@@ -58,6 +63,15 @@ public class AIChatService {
 
         String systemPrompt = promptService.getSystemPrompt();
 
+        if(request.getFileUrls() != null) {
+            for (String url : request.getFileUrls()) {
+                aiMessages.add(new OpenRouterMessage(
+                        RoleName.USER,
+                        "Please analyze the following file:\\n" + url
+                ));
+            }
+        }
+
         // System
         aiMessages.add(new OpenRouterMessage(
                 RoleName.ASSISTANT,
@@ -69,9 +83,20 @@ public class AIChatService {
                 .orElseThrow(() -> new AppException(ErrorCode.HISTORY_NOT_FOUND));
 
         for (Message msg : history) {
+            String content = msg.getContent();
+
+            // Get file
+            if(msg.getAttachments() != null && !msg.getAttachments().isEmpty()) {
+                String files = msg.getAttachments().stream()
+                        .map(Attachment::getFileUrl)
+                        .reduce("",(a,b) -> a + "\n" + b);
+
+                content += "\nAttached file:\n" + files;
+            }
+
             aiMessages.add(new OpenRouterMessage(
                     msg.getRole().toLowerCase(),
-                    msg.getContent()
+                    content
             ));
         }
 
@@ -106,6 +131,9 @@ public class AIChatService {
 
         messageRepository.save(userMsg);
 
+        // Save attachment
+        attachmentService.saveAttachments(request.getFileUrls(), userMsg);
+
         // Build message
         List<OpenRouterMessage> messages = buildMessages(conversationId, request);
 
@@ -132,7 +160,7 @@ public class AIChatService {
                 .orElseThrow(()-> new AppException(ErrorCode.CONVERSATION_NOT_FOUND));
 
         List<Message> messages = messageRepository
-                .findByConversationIdOrderByCreatedAt(conversation.getId());
+                .findByConversationIdWithAttachments(conversation.getId());
 
         List<MessageResponse> res = messageMapper.toMessageResponseList(messages);
 
@@ -149,7 +177,7 @@ public class AIChatService {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Conversation> result = conversationRepository.findAll(pageable);
+        Page<Conversation> result = conversationRepository.findByUserId(user.getId(),pageable);
 
         List<ConversationResponse> conversations = conversationMapper
                 .toConversationResponseList(result.getContent());

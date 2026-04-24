@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class AIChatRequest {
-    private String conversationId;
+//    private String conversationId;
     private String message;
+    private List<String> fileUrls;
 }
