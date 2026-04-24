@@ -19,7 +19,7 @@ jobs:
           java-version: 17
 
       - name: Build JAR
-        run: ./mvnw clean package -DskipTests
+        run: chmod +x mvnw && ./mvnw clean package -DskipTests
 
       - name: Copy to EC2
         uses: appleboy/scp-action@v0.1.4
