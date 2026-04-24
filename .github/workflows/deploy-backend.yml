@@ -30,12 +30,30 @@ jobs:
           source: "target/*.jar"
           target: "/home/ubuntu/app/"
 
-      - name: Restart app
+      - name: Deploy & Run on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -e
+            cd /home/ubuntu/app
+
+            echo "Creating .env file..."
+            cat > .env <<EOF
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            EOF
+
+            echo "Export environment variables..."
+            export $(grep -v '^#' .env | xargs)
+
+            echo "Stopping old app..."
             pkill java || true
-            nohup java -jar /home/ubuntu/app/*.jar > app.log 2>&1 &
+
+            echo "Starting new app..."
+            nohup java -jar *.jar > app.log 2>&1 &
