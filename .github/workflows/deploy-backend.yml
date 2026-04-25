@@ -53,7 +53,8 @@ jobs:
             export DB_NAME=${{ secrets.DB_NAME }}
             export DB_USERNAME=${{ secrets.DB_USERNAME }}
             export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-
+            export OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
+            
             echo "Starting new app..."
             JAR_FILE=$(ls -t *.jar | head -n 1)
 
