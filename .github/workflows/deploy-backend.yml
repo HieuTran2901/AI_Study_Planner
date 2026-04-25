@@ -19,7 +19,9 @@ jobs:
           java-version: 21
 
       - name: Build JAR
-        run: chmod +x mvnw && ./mvnw clean package -DskipTests
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
 
       - name: Upload JAR to EC2
         uses: appleboy/scp-action@v0.1.4
@@ -39,28 +41,47 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
+
             cd /home/ubuntu/app
 
-            echo "Stopping old app..."
+            echo "=== STOP OLD APP ==="
             if [ -f app.pid ]; then
-              kill $(cat app.pid) || true
+              PID=$(cat app.pid)
+              echo "Killing PID: $PID"
+              kill -9 $PID || true
               rm -f app.pid
             fi
 
-            echo "Export env variables..."
-            export DB_HOST=${{ secrets.DB_HOST }}
-            export DB_PORT=${{ secrets.DB_PORT }}
-            export DB_NAME=${{ secrets.DB_NAME }}
-            export DB_USERNAME=${{ secrets.DB_USERNAME }}
-            export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            export OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
-            
-            echo "Starting new app..."
+            echo "=== EXPORT ENV ==="
+            export DB_HOST="${{ secrets.DB_HOST }}"
+            export DB_PORT="${{ secrets.DB_PORT }}"
+            export DB_NAME="${{ secrets.DB_NAME }}"
+            export DB_USERNAME="${{ secrets.DB_USERNAME }}"
+            export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+            export OPENROUTER_API_KEY="${{ secrets.OPENROUTER_API_KEY }}"
+
+            echo "Checking OPENROUTER_API_KEY:"
+            if [ -z "$OPENROUTER_API_KEY" ]; then
+              echo "❌ OPENROUTER_API_KEY IS EMPTY"
+            else
+              echo "✅ OPENROUTER_API_KEY LOADED"
+            fi
+
+            echo "=== START APP ==="
             JAR_FILE=$(ls -t *.jar | head -n 1)
+            echo "Running: $JAR_FILE"
 
             nohup java \
-            -Djava.net.preferIPv4Stack=true \
-            -jar $JAR_FILE \
-            > app.log 2>&1 & echo $! > app.pid
+              -Xms256m -Xmx512m \
+              -Djava.net.preferIPv4Stack=true \
+              -jar $JAR_FILE \
+              > app.log 2>&1 &
 
-            echo "Deployment SUCCESS"
+            echo $! > app.pid
+
+            sleep 2
+
+            echo "=== VERIFY PROCESS ==="
+            ps -p $(cat app.pid) || echo "❌ PROCESS NOT RUNNING"
+
+            echo "=== DEPLOY DONE ==="
