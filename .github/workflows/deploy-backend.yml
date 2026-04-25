@@ -1,4 +1,4 @@
-name: Deploy Backend to EC2
+name: Deploy Backend to EC2 (Production Clean)
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Build JAR
         run: chmod +x mvnw && ./mvnw clean package -DskipTests
 
-      - name: Copy to EC2
+      - name: Upload JAR to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_IP }}
@@ -29,13 +29,37 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "target/*.jar"
           target: "/home/ubuntu/app/"
+          strip_components: 1
 
-      - name: Restart app
+      - name: Deploy & Run on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            pkill java || true
-            nohup java -jar /home/ubuntu/app/*.jar > app.log 2>&1 &
+            set -e
+            cd /home/ubuntu/app
+
+            echo "Stopping old app..."
+            if [ -f app.pid ]; then
+              kill $(cat app.pid) || true
+              rm -f app.pid
+            fi
+
+            echo "Export env variables..."
+            export DB_HOST=${{ secrets.DB_HOST }}
+            export DB_PORT=${{ secrets.DB_PORT }}
+            export DB_NAME=${{ secrets.DB_NAME }}
+            export DB_USERNAME=${{ secrets.DB_USERNAME }}
+            export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+
+            echo "Starting new app..."
+            JAR_FILE=$(ls -t *.jar | head -n 1)
+
+            nohup java \
+            -Djava.net.preferIPv4Stack=true \
+            -jar $JAR_FILE \
+            > app.log 2>&1 & echo $! > app.pid
+
+            echo "Deployment SUCCESS"
