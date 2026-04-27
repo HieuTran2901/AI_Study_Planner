@@ -1,12 +1,15 @@
 import axios from "axios";
 
+const privateUrl = "http://localhost:8080/api";
+const publicUrl = "http://54.206.42.218:8080/api";
+
 const apiClient = axios.create({
-  baseURL: "http://localhost:8080/api", // Adjust the base URL as needed
+  baseURL: privateUrl, // Adjust the base URL as needed
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true, // Include cookies in requests
-  timeout: 60000, // Set a timeout for requests (optional)
+  // timeout: 60000, // Set a timeout for requests (optional)
 });
 
 apiClient.interceptors.request.use((config) => {
@@ -24,7 +27,10 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     // Check if the error is due to an unauthorized access and we haven't already tried to refresh
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 && !originalRequest._retry) ||
+      (error.response?.status === 403 && !originalRequest._retry)
+    ) {
       originalRequest._retry = true; // Mark the request as having been retried
       try {
         // Attempt to refresh the token
@@ -38,7 +44,7 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest); // Retry the original request with the new token
       } catch (refreshError) {
         localStorage.removeItem("token");
-        window.location.href = "/login";
+        // window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }

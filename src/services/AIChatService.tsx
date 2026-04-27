@@ -1,8 +1,9 @@
 import { chatApi } from "@/api/chatApi";
+import type { sendMessageRequest } from "@/api/chatApi";
 
 export const AIChatService = {
-  sendMessage: async (conversationId: string, message: string) => {
-    const response = await chatApi.sendMessage(conversationId, message);
+  sendMessage: async (conversationId: string, body: sendMessageRequest) => {
+    const response = await chatApi.sendMessage(conversationId, body);
     return response.results;
   },
 
@@ -18,6 +19,11 @@ export const AIChatService = {
 
   getConversations: async () => {
     const response = await chatApi.getConversations();
+    return response.results;
+  },
+
+  uploadFile: async (file: File) => {
+    const response = await chatApi.uploadFile(file);
     return response.results;
   },
 };

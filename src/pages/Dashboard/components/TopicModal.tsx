@@ -112,3 +112,74 @@ export default function TopicModal({
     </Dialog>
   );
 }
+
+/* ===================== TREE COMPONENT ===================== */
+
+export function TopicItem({ topic, level = 0 }: any) {
+  const getColor = (difficulty: string) => {
+    switch (difficulty) {
+      case "BEGINNER":
+        return "text-green-400";
+      case "INTERMEDIATE":
+        return "text-yellow-400";
+      case "ADVANCED":
+        return "text-red-400";
+      default:
+        return "text-gray-400";
+    }
+  };
+
+  const isRoot = level === 0;
+
+  return (
+    <div className="relative">
+      {/* Tree line */}
+      {level > 0 && (
+        <div
+          className="absolute top-0 left-0 h-full border-l border-white/10"
+          style={{ left: (level - 1) * 16 + 8 }}
+        />
+      )}
+
+      <div
+        style={{ marginLeft: level * 16 }}
+        className={`rounded-xl p-3 transition border 
+        ${
+          isRoot
+            ? "bg-indigo-500/10 border-indigo-400/20"
+            : "bg-white/[0.04] border-white/10 hover:bg-white/[0.06]"
+        }`}
+      >
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            {/* Icon phân cấp */}
+            <span className="text-xs">{isRoot ? "📘" : "▪️"}</span>
+
+            <p
+              className={`text-sm ${
+                isRoot ? "font-semibold text-white" : "text-gray-200"
+              }`}
+            >
+              {topic.title}
+            </p>
+          </div>
+
+          <span className={`text-[10px] ${getColor(topic.difficulty)}`}>
+            {topic.difficulty}
+          </span>
+        </div>
+
+        <p className="text-xs text-gray-400 mt-1">{topic.description}</p>
+      </div>
+
+      {/* Children */}
+      {topic.children && topic.children.length > 0 && (
+        <div className="mt-2 space-y-2">
+          {topic.children.map((child: any, i: number) => (
+            <TopicItem key={i} topic={child} level={level + 1} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

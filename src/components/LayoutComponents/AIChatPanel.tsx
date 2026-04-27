@@ -13,7 +13,11 @@ function AIChatPanel({
   setShowAIChat: (show: boolean) => void;
 }) {
   const [input, setInput] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [showConversationModal, setShowConversationModal] = useState(false);
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [duplicateCount, setDuplicateCount] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     messages,
@@ -34,8 +38,9 @@ function AIChatPanel({
 
     const message = input.trim();
     setInput("");
+    setFiles([]);
 
-    await sendMessage(message);
+    await sendMessage(message, files);
     await getConversations();
   };
 
@@ -143,14 +148,71 @@ function AIChatPanel({
                   </div>
                 )}
 
-                <div
-                  className={`max-w-[78%] px-4 py-3 rounded-2xl text-sm ${
-                    msg.role === "user"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-white/[0.07] text-gray-200"
-                  }`}
-                >
-                  {msg.content}
+                <div className={`max-w-[78%] flex flex-col gap-2`}>
+                  {/* TEXT */}
+                  {msg.content && (
+                    <div
+                      className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                        msg.role === "user"
+                          ? "bg-indigo-600 text-white rounded-br-md"
+                          : "bg-white/[0.06] text-gray-200 rounded-bl-md border border-white/[0.06]"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                  )}
+
+                  {/* FILES */}
+                  {msg.fileUrls && msg.fileUrls.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {msg.fileUrls.map((url, index) => {
+                        if (!url) return null;
+
+                        const isImage =
+                          typeof url === "string" &&
+                          url.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+
+                        return isImage ? (
+                          <a
+                            key={index}
+                            href={url}
+                            target="_blank"
+                            className="group relative"
+                          >
+                            <img
+                              key={index}
+                              src={url}
+                              className="
+                                    rounded-2xl 
+                                    max-w-[320px] 
+                                    w-full 
+                                    max-h-[280px] 
+                                    object-cover 
+                                    border border-white/[0.08] 
+                                    shadow-md 
+                                    transition-transform duration-200 
+                                    hover:scale-[1.03]
+                                  "
+                            />
+
+                            {/* overlay hover */}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs text-white rounded-xl transition">
+                              View
+                            </div>
+                          </a>
+                        ) : (
+                          <a
+                            key={index}
+                            href={url}
+                            target="_blank"
+                            className="px-3 py-2 text-xs bg-white/[0.08] rounded-lg border border-white/[0.08] hover:bg-white/[0.12] transition"
+                          >
+                            📎 Download file
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))
@@ -197,8 +259,46 @@ function AIChatPanel({
         </div>
 
         {/* Input */}
-        <div className="p-5 border-t border-white/[0.08]">
-          <div className="flex gap-3">
+        <div className="flex flex-col gap-3 p-5 border-t border-white/[0.08]">
+          {/* PREVIEW */}
+          {files.length > 0 && (
+            <div className="grid gap-2 grid-cols-3 sm:grid-cols-4 max-h-40 overflow-y-auto pr-1">
+              {files.map((file, index) => {
+                const isImage = file.type.startsWith("image/");
+
+                return (
+                  <div
+                    key={index}
+                    className="relative group bg-white/[0.08] rounded-xl overflow-hidden aspect-square"
+                  >
+                    {isImage ? (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="px-2 py-2 text-xs truncate">
+                        📄 {file.name}
+                      </div>
+                    )}
+
+                    <button
+                      className="absolute top-1 right-1 bg-black/60 text-white text-xs rounded-full px-1 opacity-0 group-hover:opacity-100"
+                      onClick={() =>
+                        setFiles((prev) => prev.filter((_, i) => i !== index))
+                      }
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* INPUT ROW */}
+          <div className="flex gap-3 items-center">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -208,9 +308,46 @@ function AIChatPanel({
                   handleSendMessage();
                 }
               }}
+              className="flex-1"
             />
+
+            <Button
+              variant="ghost"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              📎
+            </Button>
+
             <Button onClick={handleSendMessage}>Send</Button>
           </div>
+
+          <input
+            type="file"
+            multiple
+            className="hidden"
+            ref={fileInputRef}
+            onChange={(e) => {
+              if (e.target.files) {
+                const newFiles = Array.from(e.target.files);
+
+                setFiles((prev) => {
+                  const filtered = newFiles.filter(
+                    (file) =>
+                      !prev.some(
+                        (f) => f.name === file.name && f.size === file.size,
+                      ),
+                  );
+
+                  if (filtered.length !== newFiles.length) {
+                    setDuplicateCount(newFiles.length - filtered.length);
+                    setShowDuplicateModal(true);
+                  }
+                  return [...prev, ...filtered].slice(0, 10); // Limit to 10 files total
+                });
+                e.target.value = "";
+              }
+            }}
+          />
         </div>
       </motion.div>
 
@@ -316,6 +453,50 @@ function AIChatPanel({
                   );
                 })}
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* DUPLICATE FILES MODAL */}
+      <AnimatePresence>
+        {showDuplicateModal && (
+          <motion.div
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDuplicateModal(false)}
+          >
+            <motion.div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#111118] border border-white/[0.08] rounded-2xl p-6 w-[320px] text-center shadow-xl"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            >
+              {/* Icon */}
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+                ⚠️
+              </div>
+
+              {/* Title */}
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Duplicate File
+              </h3>
+
+              {/* Content */}
+              <p className="text-sm text-gray-400 mb-4">
+                {duplicateCount} file(s) already exist and were skipped.
+              </p>
+
+              {/* Button */}
+              <Button
+                className="w-full"
+                onClick={() => setShowDuplicateModal(false)}
+              >
+                OK
+              </Button>
             </motion.div>
           </motion.div>
         )}

@@ -16,11 +16,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { useAuth } from "@/hooks/useAuth";
+import { mapAuthError } from "@/utils/apiError";
+
 export default function Register() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, isLoading } = useAuth();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
@@ -28,6 +33,7 @@ export default function Register() {
     fullName?: string;
     email?: string;
     password?: string;
+    phone?: string;
     confirmPassword?: string;
   }>({});
 
@@ -51,6 +57,9 @@ export default function Register() {
       newErrors.confirmPassword = "Please confirm your password";
     else if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
+    if (!formData.phone) newErrors.phone = "Phone number is required";
+    else if (!/^[0-9]{9,11}$/.test(formData.phone))
+      newErrors.phone = "Phone number is invalid";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -58,13 +67,18 @@ export default function Register() {
     }
 
     setErrors({});
-    setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Here you would handle actual registration
-    }, 2000);
+    try {
+      await register(
+        formData.fullName,
+        formData.email,
+        formData.phone,
+        formData.password,
+      );
+    } catch (error) {
+      const authErrors = mapAuthError(error);
+      setErrors((prev) => ({ ...prev, ...authErrors }));
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
@@ -216,6 +230,25 @@ export default function Register() {
                 </div>
                 {errors.email && (
                   <p className="text-xs text-destructive">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <div className="relative">
+                  <Input
+                    id="phone"
+                    type="text"
+                    placeholder="0123456789"
+                    value={formData.phone}
+                    onChange={(e) => handleChange("phone", e.target.value)}
+                    className={`h-11 bg-input-background border-border focus:border-primary transition-colors ${
+                      errors.phone ? "border-destructive" : ""
+                    }`}
+                  />
+                </div>
+                {errors.phone && (
+                  <p className="text-xs text-destructive">{errors.phone}</p>
                 )}
               </div>
 

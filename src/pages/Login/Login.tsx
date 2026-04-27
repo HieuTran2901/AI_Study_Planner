@@ -15,17 +15,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
-import authApi from "@/api/authApi";
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
 
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,22 +41,12 @@ export default function Login() {
     }
 
     setErrors({});
-    setIsLoading(true);
 
     // handle login
     try {
-      const res = await authApi.login({ email, password });
-
-      const token = res.results.accessToken;
-
-      await login(token);
-
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Login failed:", error);
+      await login(email, password);
+    } catch {
       setErrors({ password: "Invalid email or password" });
-    } finally {
-      setIsLoading(false);
     }
   };
 

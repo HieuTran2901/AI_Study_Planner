@@ -39,7 +39,7 @@ export function useChat() {
   }, [loadMessages]);
 
   // ====================== PUBLIC ACTIONS ======================
-  const createConversation = async (): Promise<string> => {
+  const createConversation = useCallback(async (): Promise<string> => {
     try {
       const newId = await AIChatService.createConversation();
       setConversationId(newId);
@@ -49,18 +49,30 @@ export function useChat() {
       console.error("Error creating conversation:", error);
       throw error;
     }
-  };
+  }, []);
 
+  const uploadFile = useCallback(async (file: File) => {
+    try {
+      const response = await AIChatService.uploadFile(file);
+      return response.url;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error;
+    }
+  }, []);
   const sendMessage = useCallback(
-    async (content: string) => {
+    async (content: string, file: File[] = []) => {
       if (!content.trim()) return;
 
+      const tempId = crypto.randomUUID();
+      const objectURLs = file.map((f) => URL.createObjectURL(f));
       //optimistic UI
       const tempUserMessage: MessageResponse = {
-        id: crypto.randomUUID(),
+        id: tempId,
         role: "user",
         content,
         createdAt: new Date().toISOString(),
+        fileUrls: objectURLs, // show local file preview
       };
 
       setMessages((prev) => [...prev, tempUserMessage]);
@@ -74,21 +86,42 @@ export function useChat() {
           currentId = await createConversation();
         }
 
+        let fileUrls: string[] = [];
+
+        if (file.length > 0) {
+          fileUrls = await Promise.all(file.map((file) => uploadFile(file)));
+        }
+
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === tempId ? { ...msg, fileUrls: fileUrls } : msg,
+          ),
+        );
+
+        // Clean up object URLs after use
+        objectURLs.forEach((url) => URL.revokeObjectURL(url));
+
         // send message to backend
-        const response = await AIChatService.sendMessage(currentId, content);
+        const response = await AIChatService.sendMessage(currentId, {
+          message: content,
+          fileUrls,
+        });
 
         const aiMessage: MessageResponse = {
           id: crypto.randomUUID(),
           role: "assistant",
           content: response.reply,
           createdAt: new Date().toISOString(),
+          fileUrls: [],
         };
 
         // add assistant response to messages
         setMessages((prev) => [...prev, aiMessage]);
       } catch (error) {
-        console.error("Error sending message:", error);
-
+        console.error(
+          "Error sending message:",
+          error.response.data || error.message,
+        );
         // Handle UI
         setMessages((prev) => [
           ...prev,
@@ -97,13 +130,14 @@ export function useChat() {
             role: "assistant",
             content: "Sorry, something went wrong. Please try again.",
             createdAt: new Date().toISOString(),
+            fileUrls: [],
           },
         ]);
       } finally {
         setIsLoading(false);
       }
     },
-    [conversationId],
+    [conversationId, createConversation, uploadFile],
   );
 
   const getConversations = useCallback(async () => {
@@ -147,6 +181,7 @@ export function useChat() {
     sendMessage,
     loadMessages,
     getConversations,
+    uploadFile,
     initConversation,
     resetChat,
   };

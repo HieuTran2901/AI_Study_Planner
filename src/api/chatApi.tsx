@@ -13,6 +13,7 @@ export interface MessageResponse {
   role: Role;
   content: string;
   createdAt: string;
+  fileUrls?: string[];
 }
 
 export interface ConversationResponse {
@@ -26,6 +27,18 @@ export interface ConversationDetailResponse {
   messages: MessageResponse[];
 }
 
+export interface sendMessageRequest {
+  message: string;
+  fileUrls?: string[];
+}
+
+export interface uploadFileResponse {
+  url: string;
+  fileName: string;
+  fileType: string;
+  size: number;
+}
+
 export const chatApi = {
   createConversation: async (): Promise<
     ApiResponse<{ conversationId: string }>
@@ -36,11 +49,11 @@ export const chatApi = {
 
   sendMessage: async (
     conversationId: string,
-    message: string,
+    body: sendMessageRequest,
   ): Promise<ApiResponse<AIChatResponse>> => {
     const response = await apiClient.post(
       `/conversation/${conversationId}/message`,
-      { message },
+      body,
     );
     return response.data;
   },
@@ -61,6 +74,19 @@ export const chatApi = {
       params: {
         page: 0,
         size: 20,
+      },
+    });
+    return response.data;
+  },
+
+  uploadFile: async (file: File): Promise<ApiResponse<uploadFileResponse>> => {
+    // FormData is used to send files in multipart/form-data format
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await apiClient.post("/media/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;

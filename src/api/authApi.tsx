@@ -10,9 +10,9 @@ export interface LoginRequest {
 
 export interface RegisterRequest {
   fullName: string;
-  password: string;
   email: string;
   phone: string;
+  password: string;
 }
 
 // ==================== RESPONSE INTERFACES ====================
