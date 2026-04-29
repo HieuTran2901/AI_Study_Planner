@@ -1,10 +1,10 @@
 import axios from "axios";
+import { getUrl } from "@/utils/ec2Url";
 
-const privateUrl = "http://localhost:8080/api";
-const publicUrl = "http://54.206.42.218:8080/api";
+const publicUrl = getUrl.local();
 
 const apiClient = axios.create({
-  baseURL: privateUrl, // Adjust the base URL as needed
+  baseURL: publicUrl, // Adjust the base URL as needed
   headers: {
     "Content-Type": "application/json",
   },

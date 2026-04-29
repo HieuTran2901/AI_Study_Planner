@@ -1,4 +1,14 @@
-const roadmapData: Topic[] = [
+interface Topic {
+  id: number;
+  title: string;
+  description: string;
+  status: "completed" | "in-progress" | "locked";
+  duration: string;
+  progress: number;
+  subtopics: string[];
+}
+
+export const roadmapData: Topic[] = [
   {
     id: 1,
     title: "JavaScript Fundamentals",

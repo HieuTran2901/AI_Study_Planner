@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   CheckCircle2,
   Circle,
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useLearningPathStore } from "@/hooks/storage/useLearningPathStore";
 import { mapAIToRoadmap } from "./components/Roadmapper";
+import { useLearningPath } from "@/hooks/useLearningPath";
 
 interface Topic {
   id: number;
@@ -28,9 +29,12 @@ interface Topic {
 export default function Roadmap() {
   const [expandedTopics, setExpandedTopics] = useState<number[]>([3, 4]);
 
+  const { getLearningPath } = useLearningPath();
+
   const { learningPath } = useLearningPathStore();
 
   const roadmapData = useMemo(() => {
+    if (!learningPath) return [];
     return mapAIToRoadmap(learningPath);
   }, [learningPath]);
 
@@ -76,6 +80,10 @@ export default function Roadmap() {
   ).length;
   const totalCount = roadmapData.length;
   const overallProgress = Math.round((completedCount / totalCount) * 100);
+
+  useEffect(() => {
+    getLearningPath();
+  }, [getLearningPath]);
 
   return (
     <div className="min-h-full p-8 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f1a] to-[#0a0a0f]">
@@ -202,7 +210,7 @@ export default function Roadmap() {
                     <div className="flex items-center gap-4 mb-4">
                       <div className="flex items-center gap-2 text-sm text-gray-400">
                         <Clock size={14} />
-                        <span>{topic.duration}</span>
+                        <span>{topic.duration} hours</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-400">
                         <Target size={14} />

@@ -19,14 +19,20 @@ export function useLearningPath() {
       const data = await TopicService.getLearningPath();
       setLearningPath(data);
       return data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching learning path:", err);
-      setError(err?.response?.data?.message || "Failed to load learning path");
+
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to load learning path");
+      }
+
       return null;
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [setLearningPath]);
 
   // ================= GENERATE =================
   const generateLearningPath = useCallback(
@@ -41,17 +47,21 @@ export function useLearningPath() {
         setLearningPath(data);
 
         return data;
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error generating learning path:", err);
-        setError(
-          err?.response?.data?.message || "Failed to generate learning path",
-        );
+
+        if (err instanceof Error) {
+          setError(err.message || "Failed to generate learning path");
+        } else {
+          setError("Failed to generate learning path");
+        }
+
         return null;
       } finally {
         setIsLoading(false);
       }
     },
-    [],
+    [setLearningPath],
   );
 
   return {

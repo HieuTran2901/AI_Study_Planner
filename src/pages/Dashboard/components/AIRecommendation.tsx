@@ -19,7 +19,7 @@ function AIRecommendation() {
   // load existing path
   useEffect(() => {
     getLearningPath();
-  }, []);
+  }, [getLearningPath]);
 
   const handleGenerate = () => {
     if (!input.trim()) return;
