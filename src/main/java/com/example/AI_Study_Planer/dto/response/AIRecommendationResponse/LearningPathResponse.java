@@ -14,11 +14,13 @@ import java.util.List;
 @Builder
 public class LearningPathResponse {
 
+    private String id;
     private String title;
     private List<TopicNode> topics;
 
     @Data
     public static class TopicNode {
+        private String id;
         private String title;
         private String description;
         private String difficulty;

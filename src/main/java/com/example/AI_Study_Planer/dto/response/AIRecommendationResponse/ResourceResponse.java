@@ -10,10 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResourceResponse {
+    private String id;
     private String title;
     private String url;
     private String platform;
     private String type;
-//    private Integer estimatedHours;
+    private String searchQuery;
+    private String thumbnailUrl;
+    //    private Integer estimatedHours;
     private Double rating;
 }

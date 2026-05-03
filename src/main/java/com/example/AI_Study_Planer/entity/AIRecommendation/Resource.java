@@ -14,6 +14,11 @@ public class Resource {
 
     private String title;
     private String url;
+
+    //Youtube
+    private String searchQuery;
+    private String thumbnailUrl;
+
     private String platform;
 
     @Enumerated(EnumType.STRING)

@@ -1,8 +1,9 @@
-package com.example.AI_Study_Planer.controller.AIRecomendation;
+package com.example.AI_Study_Planer.controller;
 
 import com.example.AI_Study_Planer.common.ApiResponse;
 import com.example.AI_Study_Planer.dto.request.AIRecommendation.TopicGenerateRequest;
 import com.example.AI_Study_Planer.dto.request.AIRecommendation.UpdateProgressRequest;
+import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.ResourceResponse;
 import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.UpdateTopicResponse;
 import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.LearningPathResponse;
 import com.example.AI_Study_Planer.service.AIRecommendationService.RoadmapService;

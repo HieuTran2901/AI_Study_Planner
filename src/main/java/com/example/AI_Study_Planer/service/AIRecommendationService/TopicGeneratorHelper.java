@@ -9,7 +9,9 @@ import com.example.AI_Study_Planer.enums.ResourceType;
 import com.example.AI_Study_Planer.enums.TopicStatus;
 import com.example.AI_Study_Planer.mapper.TopicMapper;
 import com.example.AI_Study_Planer.service.UnsplashService.ImageResolverService;
+import com.example.AI_Study_Planer.service.YoutubeService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
@@ -21,6 +23,7 @@ import java.util.List;
 public class TopicGeneratorHelper {
     private final TopicMapper topicMapper;
     private final ImageResolverService imageResolverService;
+    private final YoutubeService youtubeService;
 
     public LearningPathResponse parse(String json) {
         try {
@@ -52,6 +55,26 @@ public class TopicGeneratorHelper {
 
         topic.setEstimatedHours(node.getEstimatedHours());
 
+        List<Resource> resources = new ArrayList<>();
+
+        if (node.getResources() != null) {
+            for (ResourceResponse r : node.getResources()) {
+
+                List<Resource> ytResults =
+                        youtubeService.searchVideo(r.getSearchQuery());
+
+                ytResults.forEach(res -> {
+                    res.setTopic(topic);
+                    res.setRating(r.getRating()); // giữ rating từ AI
+                    res.setSearchQuery(r.getSearchQuery());
+                });
+
+                resources.addAll(ytResults);
+            }
+        }
+
+        topic.setResources(resources);
+
         if (node.getChildren() != null) {
             List<Topic> children = new ArrayList<>();
 
@@ -64,20 +87,20 @@ public class TopicGeneratorHelper {
             topic.setChildren(children);
         }
 
-        if (node.getResources() != null) {
-            List<Resource> resources = node.getResources().stream().map(r -> {
-                Resource resource = new Resource();
-                resource.setTitle(r.getTitle());
-                resource.setUrl(r.getUrl());
-                resource.setPlatform(r.getPlatform());
-                resource.setType(ResourceType.valueOf(r.getType()));
-                resource.setRating(r.getRating());
-                resource.setTopic(topic);
-                return resource;
-            }).toList();
-
-            topic.setResources(resources);
-        }
+//        if (node.getResources() != null) {
+//            List<Resource> resources = node.getResources().stream().map(r -> {
+//                Resource resource = new Resource();
+//                resource.setTitle(r.getTitle());
+//                resource.setUrl(r.getUrl());
+//                resource.setPlatform(r.getPlatform());
+//                resource.setType(ResourceType.valueOf(r.getType()));
+//                resource.setRating(r.getRating());
+//                resource.setTopic(topic);
+//                return resource;
+//            }).toList();
+//
+//            topic.setResources(resources);
+//        }
 
         return topic;
     }
@@ -86,6 +109,7 @@ public class TopicGeneratorHelper {
         LearningPathResponse res = new LearningPathResponse();
 
         res.setTitle(path.getTitle());
+        res.setId(path.getId());
 
         if (path.getTopics() != null) {
             res.setTopics(
@@ -101,6 +125,7 @@ public class TopicGeneratorHelper {
     private LearningPathResponse.TopicNode toNode(Topic topic) {
         LearningPathResponse.TopicNode node = new LearningPathResponse.TopicNode();
 
+        node.setId(topic.getId());
         node.setTitle(topic.getTitle());
         node.setDescription(topic.getDescription());
         node.setDifficulty(topic.getDifficulty());
@@ -125,11 +150,14 @@ public class TopicGeneratorHelper {
             node.setResources(
                     topic.getResources().stream().map(r -> {
                         ResourceResponse dto = new ResourceResponse();
+                        dto.setId(r.getId());
                         dto.setTitle(r.getTitle());
                         dto.setUrl(r.getUrl());
                         dto.setPlatform(r.getPlatform());
                         dto.setType(r.getType().name());
                         dto.setRating(r.getRating());
+                        dto.setSearchQuery(r.getSearchQuery());
+                        dto.setThumbnailUrl(r.getThumbnailUrl());
                         return dto;
                     }).toList()
             );
