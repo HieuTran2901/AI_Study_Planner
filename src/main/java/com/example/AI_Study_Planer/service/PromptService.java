@@ -14,8 +14,19 @@ public class PromptService {
     @Value("classpath:system-prompt.txt")
     private Resource promptResource;
 
+    @Value("classpath:recommendation-prompt.txt")
+    private Resource recommendationPrompt;
+
     public String getSystemPrompt() {
         try (InputStream input = promptResource.getInputStream()) {
+            return new String(input.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot load prompt", e);
+        }
+    }
+
+    public String getRecommendationPrompt() {
+        try (InputStream input = recommendationPrompt.getInputStream()) {
             return new String(input.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Cannot load prompt", e);

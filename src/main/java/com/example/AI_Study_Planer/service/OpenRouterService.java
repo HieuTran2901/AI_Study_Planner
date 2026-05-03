@@ -2,7 +2,7 @@ package com.example.AI_Study_Planer.service;
 
 import com.example.AI_Study_Planer.dto.request.OpenRouterMessage;
 import com.example.AI_Study_Planer.dto.request.OpenRouterRequest;
-import com.example.AI_Study_Planer.dto.response.OpenRouterResponse;
+import com.example.AI_Study_Planer.dto.response.OpenRouter.OpenRouterResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class OpenRouterService {
+
     @Value("${openRouter.custom-api-key}")
     private String apiKey;
 

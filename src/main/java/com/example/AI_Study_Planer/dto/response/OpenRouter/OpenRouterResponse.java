@@ -1,4 +1,4 @@
-package com.example.AI_Study_Planer.dto.response;
+package com.example.AI_Study_Planer.dto.response.OpenRouter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

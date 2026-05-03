@@ -17,12 +17,15 @@ public enum ErrorCode {
     HISTORY_NOT_FOUND(1010, "History not found, check your conversationId!"),
     INVALID_FILE(1011, "Invalid file"),
     INVALID_FILE_TYPE(1012, "Invalid file type"),
-    FILE_TOO_LARGE(1013, "File too large")
+    INVALID_AI_RESPONSE(1013, "Invalid AI response"),
+    FILE_TOO_LARGE(1014, "File too large"),
+    TOPIC_NOT_FOUND(1015, "Topic not found"),
+    LEARNING_PATH_NOT_FOUND(1016, "Learning path not found")
     ;
 
     private final int code;
-
     private final String message;
+
     ErrorCode(int code, String message){
         this.code = code;
         this.message = message;

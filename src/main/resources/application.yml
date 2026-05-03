@@ -23,9 +23,9 @@ jwt:
     expiration: 604800000
 
 openRouter:
-  custom-api-key: ${OPENROUTER_API_KEY}
-  model: nvidia/nemotron-3-super-120b-a12b:free
-#  model: openai/gpt-oss-20b:free
+  custom-api-key: ${CUSTOM_API_KEY}
+#  model: nvidia/nemotron-3-super-120b-a12b:free
+  model: openai/gpt-oss-20b:free   #best current model
   url: https://openrouter.ai/api/v1/chat/completions
 
 storage:
@@ -35,3 +35,12 @@ storage:
     secret-key: ${S3_SECRET_KEY:''}
     region: ${S3_REGION:ap-southeast-2}
     public-base-url: ${S3_PUBLIC_BASE_URL:https://eventhub-media-tnhieu-2026.s3.ap-southeast-2.amazonaws.com}
+
+unsplash:
+  base-url: https://api.unsplash.com
+  access-key: ${UNSPLASH_ACCESS_KEY:''}
+  secret-key: ${UNSPLASH_SECRET_KEY:''}
+
+youtube:
+  base-url: https://www.googleapis.com/youtube/v3
+  api-key: ${YOUTUBE_API_KEY:''}
