@@ -1,17 +1,17 @@
-package com.example.AI_Study_Planer.service.AIRecommendationService;
+package com.example.AI_Study_Planer.service.AIRecommendationService.TopicService;
 
 import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.LearningPathResponse;
 import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.ResourceResponse;
 import com.example.AI_Study_Planer.entity.AIRecommendation.LearningPath;
 import com.example.AI_Study_Planer.entity.AIRecommendation.Resource;
 import com.example.AI_Study_Planer.entity.AIRecommendation.Topic;
-import com.example.AI_Study_Planer.enums.ResourceType;
 import com.example.AI_Study_Planer.enums.TopicStatus;
 import com.example.AI_Study_Planer.mapper.TopicMapper;
+import com.example.AI_Study_Planer.service.AIRecommendationService.AISelectionService;
+import com.example.AI_Study_Planer.service.AIRecommendationService.Provider.ProviderManager;
 import com.example.AI_Study_Planer.service.UnsplashService.ImageResolverService;
-import com.example.AI_Study_Planer.service.YoutubeService;
+import com.example.AI_Study_Planer.service.AIRecommendationService.YoutubeService.YoutubeService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
@@ -24,6 +24,8 @@ public class TopicGeneratorHelper {
     private final TopicMapper topicMapper;
     private final ImageResolverService imageResolverService;
     private final YoutubeService youtubeService;
+    private final AISelectionService aiSelectionService;
+    private final ProviderManager providerManager;
 
     public LearningPathResponse parse(String json) {
         try {
@@ -60,16 +62,41 @@ public class TopicGeneratorHelper {
         if (node.getResources() != null) {
             for (ResourceResponse r : node.getResources()) {
 
-                List<Resource> ytResults =
-                        youtubeService.searchVideo(r.getSearchQuery());
+//                List<Resource> ytResults =
+//                        youtubeService.searchVideo(r.getSearchQuery());
+//                List<Resource> resourcesFound =
+//                        providerManager.searchAll(r.getSearchQuery());
 
-                ytResults.forEach(res -> {
-                    res.setTopic(topic);
-                    res.setRating(r.getRating()); // giữ rating từ AI
-                    res.setSearchQuery(r.getSearchQuery());
-                });
+                List<Resource> resourcesFound =
+                          providerManager.searchByType(
+                                  r.getSearchQuery(),
+                                  r.getType()
+                          );
 
-                resources.addAll(ytResults);
+                if (resourcesFound.isEmpty()) continue;
+
+                List<Resource> selectedResources =
+                        aiSelectionService.chooseBestResources(
+                                r.getSearchQuery(),
+                                resourcesFound
+                        );
+
+                for (Resource selected : selectedResources) {
+
+                    selected.setTopic(topic);
+
+                    selected.setRating(r.getRating());
+
+                    selected.setSearchQuery(r.getSearchQuery());
+
+                    resources.add(selected);
+                }
+
+//                ytResults.forEach(res -> {
+//                    res.setTopic(topic);
+//                    res.setRating(r.getRating()); // keep rating from AI
+//                    res.setSearchQuery(r.getSearchQuery());
+//                });
             }
         }
 

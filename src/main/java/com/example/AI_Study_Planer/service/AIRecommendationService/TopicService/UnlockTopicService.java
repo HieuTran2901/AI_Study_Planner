@@ -1,4 +1,4 @@
-package com.example.AI_Study_Planer.service.AIRecommendationService;
+package com.example.AI_Study_Planer.service.AIRecommendationService.TopicService;
 
 import com.example.AI_Study_Planer.entity.AIRecommendation.Topic;
 import com.example.AI_Study_Planer.enums.TopicStatus;

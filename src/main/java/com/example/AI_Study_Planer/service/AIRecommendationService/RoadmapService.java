@@ -8,6 +8,8 @@ import com.example.AI_Study_Planer.entity.User;
 import com.example.AI_Study_Planer.enums.TopicStatus;
 import com.example.AI_Study_Planer.exception.AppException;
 import com.example.AI_Study_Planer.repository.LearningPathRepository;
+import com.example.AI_Study_Planer.service.AIRecommendationService.TopicService.TopicGeneratorHelper;
+import com.example.AI_Study_Planer.service.AIRecommendationService.TopicService.UnlockTopicService;
 import com.example.AI_Study_Planer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

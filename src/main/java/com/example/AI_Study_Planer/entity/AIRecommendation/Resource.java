@@ -14,12 +14,26 @@ public class Resource {
 
     private String title;
     private String url;
+    private String platform;
 
     //Youtube
     private String searchQuery;
     private String thumbnailUrl;
+    private Long viewCount;
+    private Long likeCount;
+    private String channelTitle;
+    private String publishedAt;
+    private Integer durationSeconds;
+    private Double aiScore;
 
-    private String platform;
+    //Github
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    private String author;
+    private Integer stars;
+    private Integer forks;
+    private String githubOwner;
 
     @Enumerated(EnumType.STRING)
     private ResourceType type;

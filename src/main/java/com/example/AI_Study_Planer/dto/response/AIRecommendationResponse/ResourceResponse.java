@@ -15,8 +15,17 @@ public class ResourceResponse {
     private String url;
     private String platform;
     private String type;
+    private Double rating;
+
+    // Youtube
     private String searchQuery;
     private String thumbnailUrl;
-    //    private Integer estimatedHours;
-    private Double rating;
+    private Long viewCount;
+    private String channelTitle;
+    private Integer durationSeconds;
+
+    // Github
+    private String description;
+    private String author;
+    private Integer stars;
 }

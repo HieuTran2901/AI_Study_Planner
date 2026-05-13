@@ -11,25 +11,32 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class PromptService {
 
-    @Value("classpath:system-prompt.txt")
-    private Resource promptResource;
+    @Value("classpath:prompt/system-prompt.txt")
+    private Resource systemPrompt;
 
-    @Value("classpath:recommendation-prompt.txt")
+    @Value("classpath:prompt/recommendation-prompt.txt")
     private Resource recommendationPrompt;
 
-    public String getSystemPrompt() {
-        try (InputStream input = promptResource.getInputStream()) {
+    @Value("classpath:prompt/chooseBestResource-prompt.txt")
+    private Resource chooseBestVideoPrompt;
+
+    private String loadResource(Resource resource) {
+        try (InputStream input = resource.getInputStream()) {
             return new String(input.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Cannot load prompt", e);
         }
     }
 
+    public String getSystemPrompt() {
+        return loadResource(systemPrompt);
+    }
+
     public String getRecommendationPrompt() {
-        try (InputStream input = recommendationPrompt.getInputStream()) {
-            return new String(input.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot load prompt", e);
-        }
+        return loadResource(recommendationPrompt);
+    }
+
+    public String getBestResourcePrompt() {
+        return loadResource(chooseBestVideoPrompt);
     }
 }

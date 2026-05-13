@@ -3,12 +3,13 @@ package com.example.AI_Study_Planer.controller;
 import com.example.AI_Study_Planer.common.ApiResponse;
 import com.example.AI_Study_Planer.dto.request.AIRecommendation.TopicGenerateRequest;
 import com.example.AI_Study_Planer.dto.request.AIRecommendation.UpdateProgressRequest;
-import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.ResourceResponse;
+import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.CourseDetailResponse;
 import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.UpdateTopicResponse;
 import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.LearningPathResponse;
+import com.example.AI_Study_Planer.service.AIRecommendationService.CoursesService.CourseService;
 import com.example.AI_Study_Planer.service.AIRecommendationService.RoadmapService;
-import com.example.AI_Study_Planer.service.AIRecommendationService.TopicGeneratorService;
-import com.example.AI_Study_Planer.service.AIRecommendationService.TopicProgressService;
+import com.example.AI_Study_Planer.service.AIRecommendationService.TopicService.TopicGeneratorService;
+import com.example.AI_Study_Planer.service.AIRecommendationService.TopicService.TopicProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class AIRecommendationController {
     private final TopicGeneratorService topicGeneratorService;
     private final TopicProgressService topicProgressService;
     private final RoadmapService roadmapService;
+    private final CourseService courseService;
 
     @GetMapping
     public ApiResponse<LearningPathResponse> getCurrent(Authentication authentication) {
@@ -54,6 +56,16 @@ public class AIRecommendationController {
 
         return ApiResponse.<Void>builder()
                 .message("Subtopic complete")
+                .build();
+    }
+
+    @GetMapping("/course/{id}")
+    public ApiResponse<CourseDetailResponse> getCourseDetail(
+            @PathVariable String id,
+            Authentication authentication
+    ) {
+        return ApiResponse.<CourseDetailResponse>builder()
+                .results(courseService.getCourseDetail(id, authentication))
                 .build();
     }
 }
