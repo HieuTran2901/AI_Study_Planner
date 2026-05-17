@@ -15,16 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { useLearningPathStore } from "@/hooks/storage/useLearningPathStore";
 import { mapAIToRoadmap } from "./components/Roadmapper";
 import { useLearningPath } from "@/hooks/useLearningPath";
-
-interface Topic {
-  id: number;
-  title: string;
-  description: string;
-  status: "completed" | "in-progress" | "locked";
-  duration: string;
-  progress: number;
-  subtopics: string[];
-}
+import type { Topic } from "@/types/Entity";
 
 export default function Roadmap() {
   const [expandedTopics, setExpandedTopics] = useState<number[]>([3, 4]);
@@ -140,7 +131,7 @@ export default function Roadmap() {
 
         {/* Topics */}
         <div className="space-y-6">
-          {roadmapData.map((topic) => {
+          {roadmapData.map((topic: Topic) => {
             const config = getStatusConfig(topic.status);
             const Icon = config.icon;
             const isExpanded = expandedTopics.includes(topic.id);

@@ -1,4 +1,5 @@
-import type { LearningPathResponse, TopicStatus } from "@/api/topicApi";
+import type { LearningPathResponse } from "@/types/Response";
+import type { TopicStatus } from "@/types/Enums";
 
 export const mapAIToRoadmap = (learningPath: LearningPathResponse) => {
   if (!learningPath?.topics) return [];

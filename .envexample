@@ -1,0 +1,4 @@
+# Ec2 env
+VITE_EC2_IP=Your_Public_EC2_IP
+VITE_HOST=localhost
+VITE_PORT=8080

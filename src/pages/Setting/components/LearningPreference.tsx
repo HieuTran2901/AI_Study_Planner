@@ -1,145 +1,52 @@
 import { BookOpen, Target } from "lucide-react";
+import { Plus, X, Calendar, Clock, Brain } from "lucide-react";
+import { useState, useEffect } from "react";
+import { usePreference } from "@/hooks";
+import { DEFAULT_PREFERENCES, LEARNING_LEVELS, StudyTime } from "@/types/Enums";
+import type { UserPreferenceRequest } from "@/types/Request";
 import {
-  Plus,
-  X,
-  Calendar,
-  Clock,
-  Brain,
-  Headphones,
-  Eye,
-  FileText,
-  Activity,
-  Sun,
-  Sunset,
-  Moon,
-  CloudMoon,
-} from "lucide-react";
-import { useState } from "react";
-
-const suggestedSubjects = [
-  "JavaScript",
-  "Python",
-  "React",
-  "Java",
-  "English",
-  "Mathematics",
-  "Data Science",
-  "Machine Learning",
-  "Web Development",
-  "UI/UX Design",
-  "Spanish",
-  "German",
-  "Business",
-  "Marketing",
-  "Photography",
-];
-
-const learningGoalOptions = [
-  {
-    value: "job",
-    label: "Get a Job",
-    description: "Land your dream role with focused preparation",
-  },
-  {
-    value: "english",
-    label: "Improve English",
-    description: "Master communication and fluency",
-  },
-  {
-    value: "exam",
-    label: "Prepare for Exam",
-    description: "Ace your upcoming tests and certifications",
-  },
-  {
-    value: "skill",
-    label: "Learn New Skill",
-    description: "Expand your knowledge and capabilities",
-  },
-];
-
-const learningStyleOptions = [
-  {
-    value: "visual",
-    label: "Visual",
-    description: "Diagrams, videos, infographics",
-    icon: Eye,
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    value: "auditory",
-    label: "Auditory",
-    description: "Audio explanations, podcasts",
-    icon: Headphones,
-    color: "from-purple-500 to-pink-500",
-  },
-  {
-    value: "reading",
-    label: "Reading/Writing",
-    description: "Text-based content, articles",
-    icon: FileText,
-    color: "from-emerald-500 to-teal-500",
-  },
-  {
-    value: "kinesthetic",
-    label: "Kinesthetic",
-    description: "Practice, exercises, hands-on",
-    icon: Activity,
-    color: "from-orange-500 to-red-500",
-  },
-];
-
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const studyTimeOptions = [
-  {
-    value: "morning",
-    label: "Morning",
-    icon: Sun,
-    time: "6AM - 12PM",
-    color: "text-yellow-400",
-  },
-  {
-    value: "afternoon",
-    label: "Afternoon",
-    icon: Sunset,
-    time: "12PM - 6PM",
-    color: "text-orange-400",
-  },
-  {
-    value: "evening",
-    label: "Evening",
-    icon: Moon,
-    time: "6PM - 10PM",
-    color: "text-indigo-400",
-  },
-  {
-    value: "night",
-    label: "Night",
-    icon: CloudMoon,
-    time: "10PM - 2AM",
-    color: "text-purple-400",
-  },
-];
+  suggestedSubjects,
+  learningGoalOptions,
+  studyTimeOptions,
+  learningStyleOptions,
+  weekDays,
+} from "@/constants";
 
 function LearningPreference() {
   const [subjectInput, setSubjectInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [formData, setFormData] = useState<UserPreferenceRequest | null>(null);
 
-  const [preferences, setPreferences] = useState({
-    favoriteSubjects: ["JavaScript", "React", "Python"],
-    learningGoal: "skill",
-    currentLevel: "intermediate",
-    dailyStudyMinutes: 120,
-    weeklyStudyDays: [0, 1, 2, 3, 4], // Mon-Fri
-    preferredStudyTimes: ["morning", "evening"],
-    learningStyle: "visual",
-  });
+  const {
+    preferences,
+    fetchPreferences,
+    updatePreferences,
+    isFetching,
+    isSaving: isUpdating,
+    error,
+  } = usePreference();
+
+  useEffect(() => {
+    fetchPreferences();
+  }, [fetchPreferences]);
+
+  const data = formData ?? preferences ?? DEFAULT_PREFERENCES;
+
+  // const [preferences, setPreferences] = useState({
+  //   favoriteSubjects: ["JavaScript", "React", "Python"],
+  //   learningGoal: "skill",
+  //   currentLevel: "intermediate",
+  //   dailyStudyMinutes: 120,
+  //   weeklyStudyDays: [0, 1, 2, 3, 4], // Mon-Fri
+  //   preferredStudyTimes: ["morning", "evening"],
+  //   learningStyle: "visual",
+  // });
 
   const addSubject = (subject: string) => {
-    if (subject && !preferences.favoriteSubjects.includes(subject)) {
-      setPreferences({
-        ...preferences,
-        favoriteSubjects: [...preferences.favoriteSubjects, subject],
+    if (subject && !data.favoriteSubjects.includes(subject)) {
+      setFormData({
+        ...data,
+        favoriteSubjects: [...data.favoriteSubjects, subject],
       });
       setSubjectInput("");
       setShowSuggestions(false);
@@ -147,33 +54,43 @@ function LearningPreference() {
   };
 
   const removeSubject = (subject: string) => {
-    setPreferences({
-      ...preferences,
-      favoriteSubjects: preferences.favoriteSubjects.filter(
-        (s) => s !== subject,
-      ),
+    setFormData({
+      ...data,
+      favoriteSubjects: data.favoriteSubjects.filter((s) => s !== subject),
     });
   };
 
   const toggleWeekDay = (index: number) => {
-    const newDays = preferences.weeklyStudyDays.includes(index)
-      ? preferences.weeklyStudyDays.filter((d) => d !== index)
-      : [...preferences.weeklyStudyDays, index].sort();
-    setPreferences({ ...preferences, weeklyStudyDays: newDays });
+    const newDays = data.weeklyStudyDays.includes(index)
+      ? data.weeklyStudyDays.filter((d) => d !== index)
+      : [...data.weeklyStudyDays, index].sort();
+    setFormData({ ...data, weeklyStudyDays: newDays });
   };
 
-  const toggleStudyTime = (time: string) => {
-    const newTimes = preferences.preferredStudyTimes.includes(time)
-      ? preferences.preferredStudyTimes.filter((t) => t !== time)
-      : [...preferences.preferredStudyTimes, time];
-    setPreferences({ ...preferences, preferredStudyTimes: newTimes });
+  const toggleStudyTime = (time: StudyTime) => {
+    const newTimes = data.preferredStudyTimes.includes(time)
+      ? data.preferredStudyTimes.filter((t) => t !== time)
+      : [...data.preferredStudyTimes, time];
+    setFormData({ ...data, preferredStudyTimes: newTimes });
   };
 
   const filteredSuggestions = suggestedSubjects.filter(
     (s) =>
       s.toLowerCase().includes(subjectInput.toLowerCase()) &&
-      !preferences.favoriteSubjects.includes(s),
+      !data.favoriteSubjects.includes(s),
   );
+
+  const handleSavePreferences = () => {
+    updatePreferences(formData!);
+  };
+
+  if (isFetching && !formData) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="text-slate-400">Loading preferences...</div>
+      </div>
+    );
+  }
   return (
     <div className="space-y-6 pb-24">
       {/* <div>
@@ -195,7 +112,7 @@ function LearningPreference() {
 
         {/* Selected Subjects */}
         <div className="flex flex-wrap gap-2">
-          {preferences.favoriteSubjects.map((subject) => (
+          {data.favoriteSubjects.map((subject) => (
             <span
               key={subject}
               className="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 text-sm flex items-center gap-2 hover:border-indigo-500/50 transition-all group"
@@ -268,10 +185,10 @@ function LearningPreference() {
             <button
               key={option.value}
               onClick={() =>
-                setPreferences({ ...preferences, learningGoal: option.value })
+                setFormData({ ...data, learningGoal: option.value })
               }
               className={`p-4 rounded-xl border-2 text-left transition-all ${
-                preferences.learningGoal === option.value
+                data.learningGoal === option.value
                   ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20"
                   : "border-white/10 hover:border-white/20 bg-slate-800/40"
               }`}
@@ -294,14 +211,12 @@ function LearningPreference() {
         </p>
 
         <div className="grid grid-cols-3 gap-4">
-          {["beginner", "intermediate", "advanced"].map((level) => (
+          {LEARNING_LEVELS.map((level) => (
             <button
               key={level}
-              onClick={() =>
-                setPreferences({ ...preferences, currentLevel: level })
-              }
+              onClick={() => setFormData({ ...data, currentLevel: level })}
               className={`px-6 py-4 rounded-xl border-2 transition-all capitalize font-medium ${
-                preferences.currentLevel === level
+                data.currentLevel === level
                   ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20 ring-4 ring-indigo-500/20"
                   : "border-white/10 hover:border-white/20 bg-slate-800/40"
               }`}
@@ -331,10 +246,10 @@ function LearningPreference() {
               min="30"
               max="480"
               step="15"
-              value={preferences.dailyStudyMinutes}
+              value={data.dailyStudyMinutes}
               onChange={(e) =>
-                setPreferences({
-                  ...preferences,
+                setFormData({
+                  ...data,
                   dailyStudyMinutes: Number(e.target.value),
                 })
               }
@@ -342,16 +257,16 @@ function LearningPreference() {
             />
             <div className="min-w-[7rem] text-right">
               <span className="text-2xl font-semibold text-indigo-400">
-                {preferences.dailyStudyMinutes}
+                {data.dailyStudyMinutes}
               </span>
               <span className="text-sm text-slate-400 ml-1">min/day</span>
             </div>
           </div>
           <p className="text-xs text-slate-500 mt-2">
-            That's {Math.floor(preferences.dailyStudyMinutes / 60)} hour
-            {Math.floor(preferences.dailyStudyMinutes / 60) !== 1 ? "s" : ""}
-            {preferences.dailyStudyMinutes % 60 > 0 &&
-              ` ${preferences.dailyStudyMinutes % 60} minutes`}{" "}
+            That's {Math.floor(data.dailyStudyMinutes / 60)} hour
+            {Math.floor(data.dailyStudyMinutes / 60) !== 1 ? "s" : ""}
+            {data.dailyStudyMinutes % 60 > 0 &&
+              ` ${data.dailyStudyMinutes % 60} minutes`}{" "}
             per day
           </p>
         </div>
@@ -367,7 +282,7 @@ function LearningPreference() {
                 key={day}
                 onClick={() => toggleWeekDay(index)}
                 className={`flex-1 px-4 py-3 rounded-xl border-2 transition-all font-medium ${
-                  preferences.weeklyStudyDays.includes(index)
+                  data.weeklyStudyDays.includes(index)
                     ? "border-indigo-500 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/30"
                     : "border-white/10 hover:border-white/20 bg-slate-800/40"
                 }`}
@@ -377,9 +292,8 @@ function LearningPreference() {
             ))}
           </div>
           <p className="text-xs text-slate-500 mt-2">
-            {preferences.weeklyStudyDays.length} day
-            {preferences.weeklyStudyDays.length !== 1 ? "s" : ""} per week
-            selected
+            {data.weeklyStudyDays.length} day
+            {data.weeklyStudyDays.length !== 1 ? "s" : ""} per week selected
           </p>
         </div>
       </div>
@@ -402,7 +316,7 @@ function LearningPreference() {
                 key={option.value}
                 onClick={() => toggleStudyTime(option.value)}
                 className={`p-5 rounded-xl border-2 transition-all ${
-                  preferences.preferredStudyTimes.includes(option.value)
+                  data.preferredStudyTimes.includes(option.value)
                     ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20"
                     : "border-white/10 hover:border-white/20 bg-slate-800/40"
                 }`}
@@ -431,13 +345,13 @@ function LearningPreference() {
               <button
                 key={option.value}
                 onClick={() =>
-                  setPreferences({
-                    ...preferences,
+                  setFormData({
+                    ...data,
                     learningStyle: option.value,
                   })
                 }
                 className={`p-6 rounded-xl border-2 text-left transition-all group ${
-                  preferences.learningStyle === option.value
+                  data.learningStyle === option.value
                     ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20"
                     : "border-white/10 hover:border-white/20 bg-slate-800/40"
                 }`}
@@ -452,6 +366,19 @@ function LearningPreference() {
               </button>
             );
           })}
+        </div>
+        <div className="flex justify-end bottom-0 pt-4">
+          <button
+            onClick={handleSavePreferences}
+            disabled={isUpdating}
+            className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium shadow-lg shadow-indigo-500/30 flex items-center gap-2"
+          >
+            {isUpdating && (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            )}
+
+            {isUpdating ? "Saving..." : "Save Preferences"}
+          </button>
         </div>
       </div>
     </div>

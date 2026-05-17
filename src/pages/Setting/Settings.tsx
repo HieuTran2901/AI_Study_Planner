@@ -1,67 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  User,
-  Target,
-  Bell,
-  Palette,
-  Shield,
-  ChevronRight,
-  Brain,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Security, {
   Profile,
   Goal,
   Notification,
   Appearance,
+  LearningPreference,
 } from "./components";
-import LearningPreference from "./components/LearningPreference";
 
-type SettingsTab =
-  | "profile"
-  | "learning-preferences"
-  | "goals"
-  | "notifications"
-  | "appearance"
-  | "security";
-
-const sidebarItems = [
-  {
-    id: "profile" as SettingsTab,
-    icon: User,
-    label: "Profile",
-    description: "Personal information",
-  },
-  {
-    id: "learning-preferences" as SettingsTab,
-    icon: Brain,
-    label: "Learning Preferences",
-    description: "Customize your learning experience",
-  },
-  {
-    id: "goals" as SettingsTab,
-    icon: Target,
-    label: "Learning Goals",
-    description: "Study targets & preferences",
-  },
-  {
-    id: "notifications" as SettingsTab,
-    icon: Bell,
-    label: "Notifications",
-    description: "Alerts & reminders",
-  },
-  {
-    id: "appearance" as SettingsTab,
-    icon: Palette,
-    label: "Appearance",
-    description: "Theme & display",
-  },
-  {
-    id: "security" as SettingsTab,
-    icon: Shield,
-    label: "Privacy & Security",
-    description: "Account protection",
-  },
-];
+import { sidebarItems, type SettingsTab } from "@/constants";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState<SettingsTab>("goals");

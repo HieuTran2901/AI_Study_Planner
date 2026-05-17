@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { type LearningPathResponse } from "@/api/topicApi";
+import type { LearningPathResponse } from "@/types/Response";
 
 interface LearningPathState {
   learningPath: LearningPathResponse | null;

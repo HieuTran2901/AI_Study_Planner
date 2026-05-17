@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import authApi from "@/api/authApi";
-import { type User } from "@/types/User.type";
 import {
   TotalStudyHours,
   AIRecommendation,
@@ -11,22 +8,10 @@ import {
   RecentActivity,
   TodayTask,
 } from "./components";
+import useUser from "@/hooks/useUser";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await authApi.getCurrentUser();
-        setUser(response.results);
-      } catch (error) {
-        console.error("Failed to fetch user info:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const { user } = useUser();
 
   return (
     <div className="min-h-full p-8 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f1a] to-[#0a0a0f]">

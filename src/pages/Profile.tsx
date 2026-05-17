@@ -21,7 +21,7 @@ import {
 
 import { useState, useEffect } from "react";
 import authApi from "@/api/authApi";
-import { type User as UserType } from "@/types/User.type";
+import { type User as UserType } from "@/types/Entity/User";
 
 const studyData = [
   { day: "Mon", hours: 2.5 },

@@ -10,6 +10,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import HelpAndSupport from "@/pages/HelpAndSupport";
 import Profile from "@/pages/Profile";
+import { CourseLearning } from "@/pages/CourseLearning";
 import { Layout } from "@/components/Layout";
 
 export const publicRoutes = createBrowserRouter([
@@ -28,6 +29,10 @@ export const publicRoutes = createBrowserRouter([
       {
         path: "courses",
         Component: Courses,
+      },
+      {
+        path: "course-learning/:id",
+        Component: CourseLearning,
       },
       {
         path: "timer",
