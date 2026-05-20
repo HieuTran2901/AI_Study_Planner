@@ -46,6 +46,8 @@ export function usePreference() {
 
       setPreferences(data);
 
+      console.log(data);
+
       return data;
     } catch (err: unknown) {
       const message = getErrorMessage(err);

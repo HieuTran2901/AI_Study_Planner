@@ -1,3 +1,9 @@
-export const PreferredLanguage = ["ENGLISH", "VIETNAMESE"] as const;
+export const PREFERRED_LANGUAGES = [
+  "ENGLISH",
+  "VIETNAMESE",
+  "JAPANESE",
+  "KOREAN",
+  "CHINESE",
+] as const;
 
-export type PreferredLanguage = (typeof PreferredLanguage)[number];
+export type PreferredLanguage = (typeof PREFERRED_LANGUAGES)[number];
