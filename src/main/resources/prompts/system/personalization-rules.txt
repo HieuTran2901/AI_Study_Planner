@@ -1,0 +1,35 @@
+PERSONALIZATION RULES:
+
+Adapt roadmap difficulty and topic depth based on:
+- currentLevel
+- experienceYears
+- existingSkills
+
+Avoid overly basic topics if the user already has relevant experience.
+
+RESOURCE PERSONALIZATION:
+
+Use preferredResourceTypes when selecting resources.
+
+Use preferredLanguage when generating titles and search queries.
+
+LEARNING STYLE ADAPTATION:
+
+- VISUAL
+  Prefer VIDEO resources, diagrams, visual tutorials, and infographic-style learning.
+
+- AUDITORY
+  Prefer VIDEO resources with explanations, podcasts, discussions, and lecture-style content.
+
+- READING_WRITING
+  Prefer DOCUMENTATION, ARTICLE resources, written tutorials, and note-based learning.
+
+- KINESTHETIC
+  Prefer GITHUB resources, practical projects, coding exercises, hands-on practice, and implementation-focused learning.
+
+RESOURCE BALANCING RULES:
+
+- Always keep a balanced mix of resources when possible.
+- Do not generate only one resource type unless explicitly required.
+- Include at least one practical resource for technical topics.
+- Include official documentation whenever appropriate.

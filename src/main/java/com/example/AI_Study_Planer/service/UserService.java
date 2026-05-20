@@ -90,29 +90,4 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    public UserPreferenceResponse updatePreference(UserPreferenceRequest request, Authentication authentication) {
-        User user = getCurrentUser(authentication);
-
-        UserPreference userPreference = preferenceRepository.findByUserId(user.getId())
-                .orElseGet(() -> {
-                    UserPreference newPreference = new UserPreference();
-                    newPreference.setUser(user);
-                    return newPreference;
-                });
-
-        preferenceMapper.updatePreference(userPreference, request);
-
-        UserPreference savePreference = preferenceRepository.save(userPreference);
-
-        return preferenceMapper.toPreferenceResponse(savePreference);
-    }
-
-    public UserPreferenceResponse getUserPreference(Authentication authentication) {
-        User user = getCurrentUser(authentication);
-
-        UserPreference preference = preferenceRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.PREFERENCE_NOT_FOUND));
-
-        return preferenceMapper.toPreferenceResponse(preference);
-    }
 }

@@ -1,0 +1,44 @@
+{
+  "title": "Java Backend Roadmap",
+  "topics": [
+    {
+      "title": "Java Fundamentals",
+      "description": "Learn Java syntax and OOP basics",
+      "difficulty": "BEGINNER",
+      "order": 1,
+      "estimatedHours": 20,
+      "prerequisites": [],
+      "imageQuery": "java programming",
+      "resources": [
+        {
+          "title": "Java OOP Tutorial",
+          "platform": "YouTube",
+          "searchQuery": "Java OOP tutorial beginner",
+          "type": "VIDEO",
+          "rating": "4.8"
+        }
+      ],
+      "children": [
+        {
+          "title": "Variables and Data Types",
+          "description": "Understand primitive types and variables",
+          "difficulty": "BEGINNER",
+          "order": 1,
+          "estimatedHours": 3,
+          "prerequisites": [],
+          "imageQuery": "java variables",
+          "resources": [
+            {
+              "title": "Java Variables Tutorial",
+              "platform": "YouTube",
+              "searchQuery": "Java variables tutorial",
+              "type": "VIDEO",
+              "rating": "4.7"
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

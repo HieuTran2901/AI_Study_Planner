@@ -48,4 +48,10 @@ public class YoutubeHelper {
 
         return r;
     }
+
+    public String optimizeYoutubeQuery(String query) {
+        return query
+                .replace(" ", "-")
+                .trim();
+    }
 }

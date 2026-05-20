@@ -1,5 +1,6 @@
 package com.example.AI_Study_Planer.entity;
 
+import com.example.AI_Study_Planer.enums.Preference.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,27 +21,74 @@ public class UserPreference {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    // ===== LEARNING =====
     @ElementCollection
     @CollectionTable(name = "user_favorite_subjects",
             joinColumns = @JoinColumn(name = "user_preference_id"))
     @Column(name = "subject")
     private List<String> favoriteSubjects;        // ["React", "Java", "English", ...]
 
-    private String learningGoal;                  // "Get a job", "Improve English", "Prepare for exam"...
+    @ElementCollection
+    @CollectionTable(
+            name = "user_existing_skills",
+            joinColumns = @JoinColumn(name = "user_preference_id")
+    )
+    @Column(name = "skill")
+    private List<String> existingSkills;
 
-    private String currentLevel;                  // "Beginner", "Intermediate", "Advanced"
+    @Enumerated(EnumType.STRING)
+    private LearningLevel currentLevel;
 
-    private Integer dailyStudyMinutes;            // study target (minutes)
+    private Integer experienceYears;
 
-    private Integer weeklyStudyDays;
+    // ===== GOALS =====
+
+    private String learningGoal;     // "Get a job", "Improve English", "Prepare for exam"...
+
+    private String careerTarget;
+
+    @Column(nullable = false)
+    private Boolean certificationGoal = false;
+
+    @Enumerated(EnumType.STRING)
+    private TargetTimeline targetTimeline;
+
+    // ===== STUDY HABITS =====
+
+    private Integer dailyStudyMinutes;      // study target (minutes)
 
     @ElementCollection
-    @CollectionTable(name = "preferred_study_times",
-            joinColumns = @JoinColumn(name = "user_preference_id"))
-    @Column(name = "study_time")
-    private List<String> preferredStudyTimes;     // ["morning", "evening", "night"]
+    @CollectionTable(
+            name = "user_weekly_study_days",
+            joinColumns = @JoinColumn(name = "user_preference_id")
+    )
+    @Column(name = "study_day")
+    private List<Integer> weeklyStudyDays;
 
-    private String learningStyle;                 // "visual", "auditory", "reading", "kinesthetic"
+
+    @ElementCollection
+    @CollectionTable(
+            name = "preferred_study_times",
+            joinColumns = @JoinColumn(name = "user_preference_id")
+    )
+    @Column(name = "study_time")
+    @Enumerated(EnumType.STRING)
+    private List<StudyTime> preferredStudyTimes;    // ["morning", "evening", "night"]
+
+    @Enumerated(EnumType.STRING)
+    private LearningStyle learningStyle;                 // "visual", "auditory", "reading", "kinesthetic"
+
+    // ===== CONTENT =====
+    @Enumerated(EnumType.STRING)
+    private PreferredLanguage preferredLanguage;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_preferred_resource_types",
+            joinColumns = @JoinColumn(name = "user_preference_id")
+    )
+    @Column(name = "resource_type")
+    private List<String> preferredResourceTypes;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;

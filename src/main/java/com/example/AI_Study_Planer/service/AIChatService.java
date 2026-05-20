@@ -12,9 +12,9 @@ import com.example.AI_Study_Planer.entity.User;
 import com.example.AI_Study_Planer.exception.AppException;
 import com.example.AI_Study_Planer.mapper.ConversationMapper;
 import com.example.AI_Study_Planer.mapper.MessageMapper;
-import com.example.AI_Study_Planer.repository.AttachmentRepository;
 import com.example.AI_Study_Planer.repository.ConversationRepository;
 import com.example.AI_Study_Planer.repository.MessageRepository;
+import com.example.AI_Study_Planer.service.PromptService.SystemPromptBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +35,8 @@ public class AIChatService {
     private final MessageRepository messageRepository;
 
     private final UserService userService;
-    private final PromptService promptService;
+    private final PromptServiceV1 promptService;
+    private final SystemPromptBuilder systemPromptBuilder;
     private final AttachmentService attachmentService;
 
     private final MessageMapper messageMapper;
@@ -61,7 +62,7 @@ public class AIChatService {
     ) {
         List<OpenRouterMessage> aiMessages = new ArrayList<>();
 
-        String systemPrompt = promptService.getSystemPrompt();
+        String systemPrompt = systemPromptBuilder.buildChat();
 
         if(request.getFileUrls() != null) {
             for (String url : request.getFileUrls()) {

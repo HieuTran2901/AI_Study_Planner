@@ -5,14 +5,11 @@ import com.example.AI_Study_Planer.common.ErrorCode;
 import com.example.AI_Study_Planer.dto.request.LoginRequest;
 import com.example.AI_Study_Planer.dto.request.RegisterRequest;
 import com.example.AI_Study_Planer.dto.request.UpdateProfileRequest;
-import com.example.AI_Study_Planer.dto.request.UserPreferenceRequest;
 import com.example.AI_Study_Planer.dto.response.LogoutResponse;
 import com.example.AI_Study_Planer.dto.response.TokenResponse;
-import com.example.AI_Study_Planer.dto.response.UserPreferenceResponse;
 import com.example.AI_Study_Planer.dto.response.UserResponse;
 import com.example.AI_Study_Planer.entity.RefreshToken;
 import com.example.AI_Study_Planer.entity.User;
-import com.example.AI_Study_Planer.entity.UserPreference;
 import com.example.AI_Study_Planer.exception.AppException;
 import com.example.AI_Study_Planer.mapper.UserMapper;
 import com.example.AI_Study_Planer.repository.RefreshTokenRepository;
@@ -53,15 +50,6 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/users/preference")
-    public ApiResponse<UserPreferenceResponse> getUserPreference(Authentication authentication) {
-        UserPreferenceResponse preference = userService.getUserPreference(authentication);
-
-        return ApiResponse.<UserPreferenceResponse>builder()
-                .results(preference)
-                .build();
-    }
-
     @PutMapping("/users/profile")
     public ApiResponse<UserResponse> updateUserProfile(
             @RequestBody UpdateProfileRequest request,
@@ -74,18 +62,6 @@ public class UserController {
                 .build();
     }
 
-
-    @PutMapping("/users/preference")
-    public ApiResponse<UserPreferenceResponse> updatePreference(
-            @RequestBody UserPreferenceRequest request,
-            Authentication authentication
-            ) {
-        UserPreferenceResponse preference = userService.updatePreference(request, authentication);
-
-        return ApiResponse.<UserPreferenceResponse>builder()
-                .results(preference)
-                .build();
-    }
 
     @PostMapping("/register")
     public ApiResponse<UserResponse> register(@RequestBody RegisterRequest request) {

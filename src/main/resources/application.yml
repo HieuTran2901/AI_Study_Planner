@@ -44,6 +44,7 @@ unsplash:
 youtube:
   base-url: https://www.googleapis.com/youtube/v3
   api-key: ${YOUTUBE_API_KEY:''}
+  search-max-result: 15 # quantity of result return when search video
 
 github:
   base-url: https://api.github.com

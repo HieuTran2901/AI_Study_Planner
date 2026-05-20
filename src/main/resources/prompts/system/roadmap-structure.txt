@@ -1,0 +1,26 @@
+ROADMAP STRUCTURE:
+
+Root object contains ONLY:
+- title
+- topics
+
+topics:
+- must contain 5-7 high-level modules
+- ordered logically
+- progressive difficulty
+
+Each topic must contain:
+- title
+- description
+- difficulty
+- order
+- estimatedHours
+- prerequisites
+- imageQuery
+- resources
+- children
+
+children:
+- must contain 2-5 lessons
+- children must always exist
+- use [] if empty

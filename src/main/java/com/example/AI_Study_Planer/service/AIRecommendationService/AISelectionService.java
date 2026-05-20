@@ -1,16 +1,17 @@
 package com.example.AI_Study_Planer.service.AIRecommendationService;
 
 import com.example.AI_Study_Planer.dto.request.OpenRouterMessage;
-import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.AISelectVideoResponse;
 import com.example.AI_Study_Planer.entity.AIRecommendation.Resource;
 import com.example.AI_Study_Planer.enums.ResourceType;
 import com.example.AI_Study_Planer.service.OpenRouterService;
-import com.example.AI_Study_Planer.service.PromptService;
+import com.example.AI_Study_Planer.service.PromptServiceV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ import java.util.List;
 public class AISelectionService {
 
     private final OpenRouterService openRouterService;
-    private final PromptService promptService;
+    private final PromptServiceV1 promptService;
 
     public List<Resource> chooseBestResources(
             String query,
@@ -268,8 +269,23 @@ public class AISelectionService {
             ResourceType type
     ) {
 
+        Instant twoYearsAgo = Instant.now().minus(730, ChronoUnit.DAYS);
+
         List<Resource> filtered = resources.stream()
                 .filter(r -> r.getType() == type)
+                .filter(r -> r.getDurationSeconds() >= 2400)
+                .filter(r -> r.getViewCount() >= 10000)
+                .filter(r -> {
+                    Instant publishedDate =
+                            Instant.parse(r.getPublishedAt());
+
+                    return publishedDate.isAfter(twoYearsAgo);
+                })
+                .sorted(
+                        Comparator.comparingLong(
+                                Resource::getViewCount
+                        ).reversed()
+                )
                 .toList();
 
         if (filtered.isEmpty()) {

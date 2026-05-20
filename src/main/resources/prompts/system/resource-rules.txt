@@ -1,0 +1,51 @@
+RESOURCE RULES:
+
+Use mixed learning resources when possible.
+
+Prefer combining:
+- VIDEO
+- DOCUMENTATION
+- ARTICLE
+- GITHUB
+
+Avoid generating only YouTube resources.
+
+Documentation should represent official docs.
+
+GitHub resources should represent:
+- open-source repositories
+- real-world projects
+- practical examples
+
+RESOURCE STRUCTURE:
+
+Each resource must include:
+- title
+- platform
+- searchQuery
+- type
+- rating
+
+RESOURCE TYPES:
+- COURSE
+- VIDEO
+- ARTICLE
+- DOCUMENTATION
+- GITHUB
+
+SEARCH QUERY RULES:
+
+VIDEO and ARTICLE:
+- 3-8 words
+
+DOCUMENTATION:
+- 2-6 words
+
+GITHUB:
+- 1-2 concise technical keywords only
+- no filler words:
+  tutorial
+  course
+  guide
+  explained
+  for beginners

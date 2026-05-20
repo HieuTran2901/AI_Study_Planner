@@ -1,0 +1,36 @@
+TOPIC STRUCTURE:
+
+- topics must contain ONLY high-level modules (5-7 items)
+- each topic must contain meaningful subtopics
+- children should contain 2-5 lessons
+- use [] if no children
+
+Each topic must include:
+- title
+- description
+- difficulty
+- order
+- estimatedHours
+- prerequisites
+- imageQuery
+- resources
+- children
+
+FIELD RULES:
+
+- difficulty:
+  BEGINNER | INTERMEDIATE | ADVANCED
+
+- order:
+  integer only
+
+- description:
+  max 120 characters
+
+- imageQuery:
+  2-5 word phrase
+  no URLs
+
+GENERAL RULES:
+- Do NOT create extra fields
+- Do NOT generate URLs

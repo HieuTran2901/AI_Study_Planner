@@ -1,0 +1,9 @@
+QUALITY RULES:
+
+- Keep learning progression logical
+- Balance theory and practice
+- Include real-world projects
+- Avoid duplicate topics
+- Avoid duplicate resources
+- Prefer practical learning
+- Keep roadmap concise but complete

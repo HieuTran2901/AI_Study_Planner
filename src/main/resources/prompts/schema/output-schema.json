@@ -1,0 +1,48 @@
+{
+  "title": "string",
+  "topics": [
+    {
+      "title": "string",
+      "description": "string",
+      "difficulty": "BEGINNER | INTERMEDIATE | ADVANCED",
+      "order": 1,
+      "estimatedHours": 0,
+      "prerequisites": [
+        "string"
+      ],
+      "imageQuery": "string",
+      "resources": [
+        {
+          "title": "string",
+          "platform": "string",
+          "searchQuery": "string",
+          "type": "COURSE | VIDEO | ARTICLE | DOCUMENTATION | GITHUB",
+          "rating": "string"
+        }
+      ],
+      "children": [
+        {
+          "title": "string",
+          "description": "string",
+          "difficulty": "BEGINNER | INTERMEDIATE | ADVANCED",
+          "order": 1,
+          "estimatedHours": 0,
+          "prerequisites": [
+            "string"
+          ],
+          "imageQuery": "string",
+          "resources": [
+            {
+              "title": "string",
+              "platform": "string",
+              "searchQuery": "string",
+              "type": "COURSE | VIDEO | ARTICLE | DOCUMENTATION | GITHUB",
+              "rating": "string"
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

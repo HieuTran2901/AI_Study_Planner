@@ -1,5 +1,6 @@
 package com.example.AI_Study_Planer.dto.response;
 
+import com.example.AI_Study_Planer.enums.Preference.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,21 +17,44 @@ public class UserPreferenceResponse {
 
     private String id;
 
+    // ===== LEARNING =====
+
     private List<String> favoriteSubjects;
+
+    private List<String> existingSkills;
+
+    private LearningLevel currentLevel;
+
+    private Integer experienceYears;
+
+    // ===== GOALS =====
 
     private String learningGoal;
 
-    private String currentLevel;
+    private String careerTarget;
+
+    private Boolean certificationGoal;
+
+    private TargetTimeline targetTimeline;
+
+    // ===== STUDY HABITS =====
 
     private Integer dailyStudyMinutes;
 
-    private Integer weeklyStudyDays;
+    // FIXED
+    private List<Integer> weeklyStudyDays;
 
-    private List<String> preferredStudyTimes;
+    private List<StudyTime> preferredStudyTimes;
 
-    private String learningStyle;
+    private LearningStyle learningStyle;
 
-    private String notes;
+    // ===== CONTENT =====
+
+    private PreferredLanguage preferredLanguage;
+
+    private List<String> preferredResourceTypes;
+
+    // ===== SYSTEM =====
 
     private LocalDateTime updatedAt;
 }

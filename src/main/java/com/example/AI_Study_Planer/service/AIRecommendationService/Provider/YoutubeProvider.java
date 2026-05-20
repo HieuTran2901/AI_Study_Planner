@@ -23,19 +23,26 @@ public class YoutubeProvider implements ResourceProvider {
     @Value("${youtube.base-url}")
     private String baseUrl;
 
+    @Value("${youtube.search-max-result}")
+    private int maxResults;
+
     private final RestTemplate restTemplate;
     private final YoutubeHelper youtubeHelper;
 
     @Override
     public List<Resource> search(String query) {
+        String optimizedQuery = youtubeHelper.optimizeYoutubeQuery(query);
 
         // ===== 1. CALL SEARCH API =====
         String searchUrl = UriComponentsBuilder
                 .fromUriString(baseUrl + "/search")
                 .queryParam("part", "snippet")
-                .queryParam("q", query)
+                .queryParam("q", optimizedQuery)
                 .queryParam("type", "video")
-                .queryParam("maxResults", 5)
+                .queryParam("order", "date") // return newest video
+                .queryParam("order","relevance") // get video that relevant to query
+                .queryParam("videoDuration", "long") // get video have long duration
+                .queryParam("maxResults", maxResults)
                 .queryParam("key", apiKey)
                 .toUriString();
 

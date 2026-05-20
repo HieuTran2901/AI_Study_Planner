@@ -5,8 +5,11 @@ import com.example.AI_Study_Planer.dto.response.UserPreferenceResponse;
 import com.example.AI_Study_Planer.entity.UserPreference;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface PreferenceMapper {
     UserPreferenceResponse toPreferenceResponse(UserPreference userPreference);
 

@@ -9,15 +9,15 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Service
-public class PromptService {
+public class PromptServiceV1 {
 
-    @Value("classpath:prompt/system-prompt.txt")
+    @Value("classpath:prompts/system-prompt.txt")
     private Resource systemPrompt;
 
-    @Value("classpath:prompt/recommendation-prompt.txt")
+    @Value("classpath:prompts/recommendation-prompt.txt")
     private Resource recommendationPrompt;
 
-    @Value("classpath:prompt/chooseBestResource-prompt.txt")
+    @Value("classpath:prompts/chooseBestResource-prompt.txt")
     private Resource chooseBestVideoPrompt;
 
     private String loadResource(Resource resource) {
