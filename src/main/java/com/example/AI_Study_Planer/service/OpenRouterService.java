@@ -1,5 +1,6 @@
 package com.example.AI_Study_Planer.service;
 
+import com.example.AI_Study_Planer.constant.RoleName;
 import com.example.AI_Study_Planer.dto.request.OpenRouterMessage;
 import com.example.AI_Study_Planer.dto.request.OpenRouterRequest;
 import com.example.AI_Study_Planer.dto.response.OpenRouter.OpenRouterResponse;
@@ -26,6 +27,28 @@ public class OpenRouterService {
     private String model;
 
     private final RestTemplate restTemplate = new RestTemplate();
+
+    public String buildChat(
+            String systemPrompt,
+            String userPrompt
+    ) {
+
+        List<OpenRouterMessage> messages =
+                List.of(
+
+                        new OpenRouterMessage(
+                                RoleName.SYSTEM,
+                                systemPrompt
+                        ),
+
+                        new OpenRouterMessage(
+                                RoleName.USER,
+                                userPrompt
+                        )
+                );
+
+        return chat(messages);
+    }
 
     public String chat(List<OpenRouterMessage> messages) {
 
@@ -62,7 +85,7 @@ public class OpenRouterService {
 
         return response.getBody()
                 .getChoices()
-                .get(0)
+                .getFirst()
                 .getMessage()
                 .getContent();
     }

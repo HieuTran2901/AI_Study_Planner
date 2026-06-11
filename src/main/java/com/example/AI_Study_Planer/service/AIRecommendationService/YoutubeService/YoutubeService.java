@@ -1,7 +1,7 @@
 package com.example.AI_Study_Planer.service.AIRecommendationService.YoutubeService;
 
-import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeSearchResponse;
-import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeVideoResponse;
+import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeResonse.YoutubeSearchResponse;
+import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeResonse.YoutubeVideoResponse;
 import com.example.AI_Study_Planer.entity.AIRecommendation.Resource;
 import com.example.AI_Study_Planer.service.AIRecommendationService.Helper.YoutubeHelper;
 import lombok.RequiredArgsConstructor;

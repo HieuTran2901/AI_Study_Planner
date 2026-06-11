@@ -1,0 +1,20 @@
+OUTPUT FORMAT:
+
+{
+  "title": "string",
+  "difficulty": "BEGINNER | INTERMEDIATE | ADVANCED",
+  "estimatedMinutes": number,
+  "questions": [
+    {
+      "questionText": "string",
+      "type": "MULTIPLE_CHOICE | TRUE_FALSE",
+      "order": number,
+      "options": [
+        {
+          "optionText": "string",
+          "isCorrect": true
+        }
+      ]
+    }
+  ]
+}

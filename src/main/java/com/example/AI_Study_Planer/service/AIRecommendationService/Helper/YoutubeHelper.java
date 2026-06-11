@@ -1,6 +1,6 @@
 package com.example.AI_Study_Planer.service.AIRecommendationService.Helper;
 
-import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeVideoResponse;
+import com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeResonse.YoutubeVideoResponse;
 import com.example.AI_Study_Planer.entity.AIRecommendation.Resource;
 import com.example.AI_Study_Planer.enums.ResourceType;
 import org.springframework.stereotype.Service;

@@ -24,7 +24,7 @@ jwt:
 
 openRouter:
   custom-api-key: ${CUSTOM_API_KEY}
-  model: openai/gpt-oss-120b:free
+  model: nvidia/nemotron-3-super-120b-a12b:free
 #  model: openai/gpt-oss-20b:free
   url: https://openrouter.ai/api/v1/chat/completions
 
@@ -48,4 +48,4 @@ youtube:
 
 github:
   base-url: https://api.github.com
-  token: ${GITHUB_TOKEN:''}  # 7day expired (08/05/2026) -> (15/05/2026)
+  token: ${GITHUB_TOKEN:''}  # 30day expired (20/05/2026) -> (30/05/2026)

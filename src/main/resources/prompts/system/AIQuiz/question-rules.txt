@@ -1,0 +1,26 @@
+QUESTION RULES:
+
+Each question MUST include:
+
+- questionText
+- type
+- order
+- options
+
+Supported question types:
+
+MULTIPLE_CHOICE
+TRUE_FALSE
+
+Questions should:
+
+- test understanding
+- avoid trivia memorization
+- be concise
+- avoid ambiguity
+
+Prefer a mix of:
+
+- conceptual questions
+- applied questions
+- practical reasoning

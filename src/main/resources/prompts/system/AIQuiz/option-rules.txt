@@ -1,0 +1,22 @@
+OPTION RULES:
+
+MULTIPLE_CHOICE:
+
+- exactly 4 options
+- exactly 1 correct answer
+
+TRUE_FALSE:
+
+- exactly 2 options
+- "True"
+- "False"
+- exactly 1 correct answer
+
+Each option MUST include:
+
+- optionText
+- isCorrect
+
+Only ONE option can contain:
+
+"isCorrect": true

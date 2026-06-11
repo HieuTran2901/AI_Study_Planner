@@ -20,7 +20,12 @@ public enum ErrorCode {
     INVALID_AI_RESPONSE(1013, "Invalid AI response"),
     FILE_TOO_LARGE(1014, "File too large"),
     TOPIC_NOT_FOUND(1015, "Topic not found"),
-    LEARNING_PATH_NOT_FOUND(1016, "Learning path not found")
+    LEARNING_PATH_NOT_FOUND(1016, "Learning path not found"),
+    FAILED_QUIZ_PARSE(1017, "Failed to parse AI quiz response"),
+    QUIZ_NOT_FOUND(1018, "Quiz not found"),
+    ATTEMPT_NOT_FOUND(1019, "Attempt not found"),
+    QUIZ_SUBMISSION_INVALID(1020, "Invalid quiz submission"),
+    QUIZ_ATTEMPT_NOT_FOUND(1021, "Quiz attempt not found")
     ;
 
     private final int code;

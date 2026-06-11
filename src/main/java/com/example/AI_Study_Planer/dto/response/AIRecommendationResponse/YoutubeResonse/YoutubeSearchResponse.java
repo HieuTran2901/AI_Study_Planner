@@ -1,4 +1,4 @@
-package com.example.AI_Study_Planer.dto.response.AIRecommendationResponse;
+package com.example.AI_Study_Planer.dto.response.AIRecommendationResponse.YoutubeResonse;
 
 
 import lombok.Data;

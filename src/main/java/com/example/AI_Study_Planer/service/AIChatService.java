@@ -35,7 +35,6 @@ public class AIChatService {
     private final MessageRepository messageRepository;
 
     private final UserService userService;
-    private final PromptServiceV1 promptService;
     private final SystemPromptBuilder systemPromptBuilder;
     private final AttachmentService attachmentService;
 

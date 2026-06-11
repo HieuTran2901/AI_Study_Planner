@@ -1,4 +1,4 @@
-package com.example.AI_Study_Planer.controller;
+package com.example.AI_Study_Planer.controller.AI;
 
 import com.example.AI_Study_Planer.common.ApiResponse;
 import com.example.AI_Study_Planer.dto.request.AIRecommendation.TopicGenerateRequest;

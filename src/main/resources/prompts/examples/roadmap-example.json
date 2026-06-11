@@ -34,6 +34,13 @@
               "searchQuery": "Java variables tutorial",
               "type": "VIDEO",
               "rating": "4.7"
+            },
+            {
+              "title": "Java Algorithms Repo",
+              "platform": "GitHub",
+              "searchQuery": "javascript algorithms",
+              "type": "GITHUB",
+              "rating": "4.8"
             }
           ],
           "children": []

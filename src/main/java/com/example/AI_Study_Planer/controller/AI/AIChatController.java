@@ -1,4 +1,4 @@
-package com.example.AI_Study_Planer.controller;
+package com.example.AI_Study_Planer.controller.AI;
 
 import com.example.AI_Study_Planer.common.ApiResponse;
 import com.example.AI_Study_Planer.dto.request.AIChatRequest;
@@ -10,8 +10,6 @@ import com.example.AI_Study_Planer.service.AIChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/conversation")

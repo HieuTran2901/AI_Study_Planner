@@ -1,0 +1,30 @@
+{
+  "title": "Java OOP Quiz",
+  "difficulty": "BEGINNER",
+  "estimatedMinutes": 10,
+  "questions": [
+    {
+      "questionText": "What does OOP stand for?",
+      "type": "MULTIPLE_CHOICE",
+      "order": 1,
+      "options": [
+        {
+          "optionText": "Object Oriented Programming",
+          "isCorrect": true
+        },
+        {
+          "optionText": "Online Operating Process",
+          "isCorrect": false
+        },
+        {
+          "optionText": "Optimized Object Pattern",
+          "isCorrect": false
+        },
+        {
+          "optionText": "Operational Output Program",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

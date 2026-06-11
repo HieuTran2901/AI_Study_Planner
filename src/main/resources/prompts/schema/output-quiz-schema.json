@@ -1,0 +1,70 @@
+{
+  "type": "object",
+  "required": [
+    "title",
+    "difficulty",
+    "estimatedMinutes",
+    "questions"
+  ],
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "difficulty": {
+      "enum": [
+        "BEGINNER",
+        "INTERMEDIATE",
+        "ADVANCED"
+      ]
+    },
+    "estimatedMinutes": {
+      "type": "number"
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": [
+          "questionText",
+          "type",
+          "order",
+          "options"
+        ],
+        "properties": {
+          "questionText": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "MULTIPLE_CHOICE",
+              "TRUE_FALSE"
+            ]
+          },
+          "order": {
+            "type": "number"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "optionText",
+                "isCorrect"
+              ],
+              "properties": {
+                "optionText": {
+                  "type": "string"
+                },
+                "isCorrect": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
