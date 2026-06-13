@@ -3,3 +3,4 @@ export * from "./TopicService";
 export * from "./AIChatService";
 export * from "./PreferenceService";
 export * from "./AuthService";
+export * from "./QuizService";

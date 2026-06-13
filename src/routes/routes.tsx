@@ -12,6 +12,12 @@ import HelpAndSupport from "@/pages/HelpAndSupport";
 import Profile from "@/pages/Profile";
 import { CourseLearning } from "@/pages/CourseLearning";
 import { Layout } from "@/components/Layout";
+import {
+  QuizDashboard,
+  QuizResult,
+  QuizReview,
+  QuizSession,
+} from "@/pages/Quiz";
 
 export const publicRoutes = createBrowserRouter([
   {
@@ -53,6 +59,22 @@ export const publicRoutes = createBrowserRouter([
       {
         path: "profile",
         Component: Profile,
+      },
+      {
+        path: "quiz",
+        Component: QuizDashboard,
+      },
+      {
+        path: "quiz/:id",
+        Component: QuizSession,
+      },
+      {
+        path: "quiz/:id/result",
+        Component: QuizResult,
+      },
+      {
+        path: "quiz/:id/review",
+        Component: QuizReview,
       },
     ],
   },

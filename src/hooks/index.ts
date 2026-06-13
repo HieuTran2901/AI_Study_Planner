@@ -5,3 +5,4 @@ export * from "./useUser";
 export * from "./useCourse";
 export * from "./usePreference";
 export * from "./useTheme";
+export * from "./useQuiz";

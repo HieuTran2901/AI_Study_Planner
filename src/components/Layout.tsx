@@ -19,6 +19,7 @@ import {
   MessageSquare,
   Menu,
   X,
+  Brain,
 } from "lucide-react";
 import { Input } from "./ui/input";
 import { AnimatePresence, motion } from "framer-motion";
@@ -28,6 +29,7 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/roadmap", label: "My Roadmap", icon: Map },
   { path: "/courses", label: "Courses", icon: GraduationCap },
+  { path: "/quiz", label: "Quizzes", icon: Brain },
   { path: "/timer", label: "Study Timer", icon: Timer },
   { path: "/progress", label: "Progress", icon: TrendingUp },
   { path: "/settings", label: "Settings", icon: Settings },

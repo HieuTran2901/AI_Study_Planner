@@ -8,3 +8,4 @@ export * from "./AuthResponse";
 export * from "./LearningPathResponse";
 export * from "./CourseDetailResponse";
 export * from "./UserPreferenceResponse";
+export * from "./Quiz";
