@@ -1,4 +1,4 @@
-import { Clock, Brain, Target, TrendingUp, Sparkles } from "lucide-react";
+import { Clock, Brain, Target, Sparkles } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Progress } from "../ui/progress";

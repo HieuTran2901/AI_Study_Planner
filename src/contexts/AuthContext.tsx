@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       window.location.href = "/"; // Redirect to home page after login
     } catch (err) {
       console.error("Login failed:", err);
-      throw err; // ⭐ để UI bắt lỗi
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       await fetchUser();
     } catch (err) {
-      console.error("Register failed:", err.response?.data || err.message);
+      console.error("Registration failed:", err);
       throw err;
     } finally {
       setIsLoading(false);

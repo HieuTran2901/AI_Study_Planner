@@ -8,11 +8,7 @@ import type {
   QuizReviewResponse,
   QuizResultResponse,
 } from "@/types/Response";
-import type {
-  GenerateQuizRequest,
-  QuizAnswerRequest,
-  QuizSubmitRequest,
-} from "@/types/Request";
+import type { GenerateQuizRequest, QuizSubmitRequest } from "@/types/Request";
 
 export const quizApi = {
   getQuiz: async (quizId: string): Promise<ApiResponse<QuizDetailResponse>> => {

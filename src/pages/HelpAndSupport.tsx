@@ -10,7 +10,6 @@ import {
   ChevronDown,
   Send,
   MessageCircle,
-  Bell,
   CheckCircle,
   Info,
   Sparkles,

@@ -10,7 +10,8 @@ export const mapAIToCourse = (learningPath: LearningPathResponse) => {
   const traverse = (topics: TopicNode[]) => {
     topics.forEach((t) => {
       if (t.resources) {
-        t.resources.forEach((r: ResourceResponse, i: number) => {
+        // t.resources.forEach((r: ResourceResponse, i: number) => {
+        t.resources.forEach((r: ResourceResponse) => {
           results.push({
             id: r.id,
             learningPathId: learningPath.id,

@@ -7,7 +7,7 @@ interface VideoPlayerProps {
 export function VideoPlayer({
   videoUrl,
   title,
-  isSticky = false,
+  // isSticky = false,
 }: VideoPlayerProps) {
   return (
     <div className="relative">

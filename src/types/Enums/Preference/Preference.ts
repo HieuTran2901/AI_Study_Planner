@@ -11,7 +11,7 @@ import {
   CloudMoon,
 } from "lucide-react";
 
-import type { LearningLevel, LearningStyle, StudyTime } from "../Preference";
+import type { LearningStyle, StudyTime } from "../Preference";
 // ================= SUBJECTS =================
 
 export const SUGGESTED_SUBJECTS = [

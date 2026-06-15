@@ -1,17 +1,8 @@
-import {
-  Clock,
-  Target,
-  Flame,
-  TrendingUp,
-  Calendar,
-  Award,
-} from "lucide-react";
+import { Clock, Target, Flame, TrendingUp, Award } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   AreaChart,

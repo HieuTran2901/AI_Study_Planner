@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
-  Lightbulb,
   Check,
   X,
   Grid3x3,
@@ -23,10 +22,10 @@ export function QuizSession() {
   //   {},
   // );
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [showHint, setShowHint] = useState(false);
+  // const [showHint, setShowHint] = useState(false);
   const [timeLeft, setTimeLeft] = useState(900);
   const [showNavigator, setShowNavigator] = useState(false);
-  const { selectedQuiz, getQuiz, isFetchingQuizzes, submitQuiz } = useQuiz();
+  const { selectedQuiz, getQuiz, submitQuiz } = useQuiz();
 
   // const questions: Question[] = [
   //   {
@@ -101,14 +100,14 @@ export function QuizSession() {
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
-      setShowHint(false);
+      // setShowHint(false);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
-      setShowHint(false);
+      // setShowHint(false);
     }
   };
 
@@ -214,49 +213,52 @@ export function QuizSession() {
 
               {/* Answer Options */}
               <div className="space-y-3">
-                {questions[currentQuestion]?.options.map((option, index) => {
-                  const questionId = String(questions[currentQuestion]?.id);
-                  const isSelected = answers[questionId] === String(option.id);
-                  return (
-                    <button
-                      key={index}
-                      onClick={() =>
-                        handleAnswerSelect(
-                          String(questions[currentQuestion].id),
-                          String(option.id),
-                        )
-                      }
-                      className={`w-full text-left p-4 sm:p-5 rounded-xl border-2 transition-all group ${
-                        isSelected
-                          ? "border-indigo-500 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 shadow-lg shadow-indigo-500/20"
-                          : "border-border bg-muted/30 hover:border-indigo-500/50 hover:bg-muted/50"
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={`w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                            isSelected
-                              ? "border-indigo-500 bg-indigo-500"
-                              : "border-muted-foreground/30 group-hover:border-indigo-500/50"
-                          }`}
-                        >
-                          {isSelected && (
-                            <Check className="h-5 w-5 text-white" />
-                          )}
+                {[...(questions[currentQuestion]?.options || [])]
+                  .sort((a, b) => a.order - b.order)
+                  .map((option, index) => {
+                    const questionId = String(questions[currentQuestion]?.id);
+                    const isSelected =
+                      answers[questionId] === String(option.id);
+                    return (
+                      <button
+                        key={index}
+                        onClick={() =>
+                          handleAnswerSelect(
+                            String(questions[currentQuestion].id),
+                            String(option.id),
+                          )
+                        }
+                        className={`w-full text-left p-4 sm:p-5 rounded-xl border-2 transition-all group ${
+                          isSelected
+                            ? "border-indigo-500 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 shadow-lg shadow-indigo-500/20"
+                            : "border-border bg-muted/30 hover:border-indigo-500/50 hover:bg-muted/50"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                              isSelected
+                                ? "border-indigo-500 bg-indigo-500"
+                                : "border-muted-foreground/30 group-hover:border-indigo-500/50"
+                            }`}
+                          >
+                            {isSelected && (
+                              <Check className="h-5 w-5 text-white" />
+                            )}
+                          </div>
+                          <span
+                            className={`font-medium ${isSelected ? "text-foreground" : "text-muted-foreground"}`}
+                          >
+                            {option.optionText}
+                          </span>
                         </div>
-                        <span
-                          className={`font-medium ${isSelected ? "text-foreground" : "text-muted-foreground"}`}
-                        >
-                          {option.optionText}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
               </div>
 
               {/* AI Hint */}
-              {questions[currentQuestion]?.hint && (
+              {/* {questions[currentQuestion]?.hint && (
                 <div className="mt-6">
                   <Button
                     variant="outline"
@@ -270,12 +272,12 @@ export function QuizSession() {
                   {showHint && (
                     <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30">
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        💡 {questions[currentQuestion].hint}
+                        💡 {questions[currentQuestion]?.hint}
                       </p>
                     </div>
                   )}
                 </div>
-              )}
+              )} */}
             </CardContent>
           </Card>
 
@@ -327,7 +329,7 @@ export function QuizSession() {
                       key={index}
                       onClick={() => {
                         setCurrentQuestion(index);
-                        setShowHint(false);
+                        // setShowHint(false);
                       }}
                       className={`aspect-square rounded-lg border-2 flex items-center justify-center font-medium transition-all ${
                         isCurrent
@@ -370,7 +372,7 @@ export function QuizSession() {
                         key={index}
                         onClick={() => {
                           setCurrentQuestion(index);
-                          setShowHint(false);
+                          // setShowHint(false);
                           setShowNavigator(false);
                         }}
                         className={`aspect-square rounded-lg border-2 flex items-center justify-center font-medium text-lg transition-all ${

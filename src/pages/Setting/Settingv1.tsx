@@ -1,15 +1,5 @@
 import { useState } from "react";
-import {
-  User,
-  Bell,
-  Shield,
-  Palette,
-  Clock,
-  Target,
-  Mail,
-  Key,
-  Save,
-} from "lucide-react";
+import { User, Bell, Shield, Palette, Target, Save } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

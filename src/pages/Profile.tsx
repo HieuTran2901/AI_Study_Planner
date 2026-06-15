@@ -279,7 +279,7 @@ export default function Profile() {
             Recent Activity
           </h3>
           <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
+            {recentActivity.map((activity) => (
               <div
                 key={activity.id}
                 className="p-5 rounded-xl bg-slate-800/40 hover:bg-slate-800/60 border border-white/5 hover:border-indigo-500/30 transition-all duration-300 hover:scale-[1.02] group"

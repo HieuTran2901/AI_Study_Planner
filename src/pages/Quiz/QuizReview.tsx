@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   XCircle,
   Lightbulb,
-  BookOpen,
   ChevronDown,
   ChevronUp,
   RotateCcw,
@@ -166,54 +165,56 @@ export function QuizReview() {
                       <div className="px-6 pb-6 space-y-4 border-t border-border/50 pt-6">
                         {/* Answer Options */}
                         <div className="space-y-2">
-                          {question.options.map((option, index) => {
-                            const isUserAnswer =
-                              option.id === question.selectedAnswer;
-                            const isCorrectAnswer = option.correct;
+                          {[...question.options]
+                            .sort((a, b) => a.order - b.order)
+                            .map((option, index) => {
+                              const isUserAnswer =
+                                option.id === question.selectedAnswer;
+                              const isCorrectAnswer = option.correct;
 
-                            return (
-                              <div
-                                key={index}
-                                className={`p-4 rounded-lg border-2 ${
-                                  isCorrectAnswer
-                                    ? "border-emerald-500 bg-emerald-500/10"
-                                    : isUserAnswer
-                                      ? "border-rose-500 bg-rose-500/10"
-                                      : "border-border bg-muted/30"
-                                }`}
-                              >
-                                <div className="flex items-start gap-3">
-                                  {isCorrectAnswer && (
-                                    <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
-                                  )}
-                                  {isUserAnswer && !isCorrectAnswer && (
-                                    <XCircle className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />
-                                  )}
-                                  <div className="flex-1">
-                                    <p
-                                      className={
-                                        isCorrectAnswer || isUserAnswer
-                                          ? "font-medium"
-                                          : ""
-                                      }
-                                    >
-                                      {option.content}
-                                    </p>
+                              return (
+                                <div
+                                  key={index}
+                                  className={`p-4 rounded-lg border-2 ${
+                                    isCorrectAnswer
+                                      ? "border-emerald-500 bg-emerald-500/10"
+                                      : isUserAnswer
+                                        ? "border-rose-500 bg-rose-500/10"
+                                        : "border-border bg-muted/30"
+                                  }`}
+                                >
+                                  <div className="flex items-start gap-3">
                                     {isCorrectAnswer && (
-                                      <p className="text-xs text-emerald-400 mt-1">
-                                        ✓ Correct Answer
-                                      </p>
+                                      <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                                     )}
                                     {isUserAnswer && !isCorrectAnswer && (
-                                      <p className="text-xs text-rose-400 mt-1">
-                                        ✗ Your Answer
-                                      </p>
+                                      <XCircle className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />
                                     )}
+                                    <div className="flex-1">
+                                      <p
+                                        className={
+                                          isCorrectAnswer || isUserAnswer
+                                            ? "font-medium"
+                                            : ""
+                                        }
+                                      >
+                                        {option.content}
+                                      </p>
+                                      {isCorrectAnswer && (
+                                        <p className="text-xs text-emerald-400 mt-1">
+                                          ✓ Correct Answer
+                                        </p>
+                                      )}
+                                      {isUserAnswer && !isCorrectAnswer && (
+                                        <p className="text-xs text-rose-400 mt-1">
+                                          ✗ Your Answer
+                                        </p>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
                         </div>
 
                         {/* Explanation */}

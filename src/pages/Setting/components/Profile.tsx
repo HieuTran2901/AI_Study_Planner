@@ -23,7 +23,7 @@ export default function Profile() {
         email: user.email || "",
         phone: user.phone || "",
         bio:
-          user.bio ||
+          // user.bio ||
           "Passionate learner and frontend developer who loves building beautiful and functional applications.",
       });
     }, 0);

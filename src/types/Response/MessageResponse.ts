@@ -1,4 +1,4 @@
-import { type Role } from "../Chat.type";
+import { type Role } from "../Common/Role";
 
 export interface MessageResponse {
   id: string;
